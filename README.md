@@ -2,6 +2,8 @@
 
 Where and why Indian lower courts are delayed, from **80,935,944 cases** filed 2010-2018, with 2026 pendency for context.
 
+**[Open the live dashboard](https://where-justice-gets-stuck.streamlit.app/)** | [Read the two-page brief](outputs/where_justice_gets_stuck_brief.pdf)
+
 Indian district and subordinate courts held 4.99 crore pending cases in July 2026. This project finds where those cases stall, using case-level records and a data-quality layer that documents every problem found along the way.
 
 > **Case data ends in 2018.** These findings describe that period, not courts today. 2026 figures come from NJDG and are context only.
@@ -35,7 +37,7 @@ Every figure has its limits spelled out in [the brief](outputs/where_justice_get
 |---|---|
 | DuckDB + Parquet pipeline: loaders, SQL rules, act-name mapping | [pipeline/](pipeline/), [sql/dq_rules.sql](sql/dq_rules.sql) |
 | Excel data-quality scorecard, with live formulas | [outputs/data_quality_scorecard.xlsx](outputs/data_quality_scorecard.xlsx) |
-| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, what-if calculator | [dashboard/](dashboard/) |
+| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, what-if calculator | [Live](https://where-justice-gets-stuck.streamlit.app/), [dashboard/](dashboard/) |
 | Two-page brief with the top findings | [outputs/where_justice_gets_stuck_brief.pdf](outputs/where_justice_gets_stuck_brief.pdf) |
 
 ### Data-management work
@@ -51,7 +53,7 @@ Every figure has its limits spelled out in [the brief](outputs/where_justice_get
 
 ## Run it
 
-The dashboard needs only the small aggregate tables included here:
+The [live dashboard](https://where-justice-gets-stuck.streamlit.app/) needs no setup. To run it yourself, it needs only the small aggregate tables included here:
 
 ```
 python -m venv .venv
@@ -71,7 +73,7 @@ Tests: `pytest tests`. They cover the survival estimator against `lifelines`, th
 
 ### Host the dashboard
 
-On [Streamlit Community Cloud](https://streamlit.io/cloud), point a new app at this repository with `dashboard/app.py` as the main file. It installs the short [dashboard/requirements.txt](dashboard/requirements.txt), and no secrets or row-level data are needed. The case data licence is non-commercial, so keep any hosted copy non-commercial too.
+The [live copy](https://where-justice-gets-stuck.streamlit.app/) runs on [Streamlit Community Cloud](https://streamlit.io/cloud) and updates when `main` changes. To host your own, point a new app at this repository with `dashboard/app.py` as the main file. It installs the short [dashboard/requirements.txt](dashboard/requirements.txt), and no secrets or row-level data are needed. The case data licence is non-commercial, so keep any hosted copy non-commercial too.
 
 ## How it is built
 

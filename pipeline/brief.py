@@ -20,7 +20,7 @@ from reportlab.platypus import Image, PageBreak, Paragraph, SimpleDocTemplate, S
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import charts as C  # noqa: E402
-from common import CHARTS, MART, OUTPUTS  # noqa: E402
+from common import CHARTS, LIVE_DASHBOARD, MART, OUTPUTS  # noqa: E402
 
 INK = HexColor(C.INK)
 MUTED = HexColor(C.MUTED)
@@ -129,7 +129,7 @@ def build(figures: dict, text: dict, charts: dict) -> Path:
         Paragraph("Where Justice Gets Stuck", st["title"]),
         Spacer(1, 2),
         Paragraph(f"Findings from {f['total_rows'] / 1e6:.1f} million Indian lower-court cases filed 2010-2018, with 2026 pendency for context. "
-                  "Ritik Yadav, November 2026.", st["sub"]),
+                  f'Ritik Yadav, November 2026. Live dashboard: <link href="{LIVE_DASHBOARD}" color="{C.ACCENT}"><u>{LIVE_DASHBOARD.removeprefix("https://").rstrip("/")}</u></link>', st["sub"]),
         Spacer(1, 5),
         Paragraph(
             f"India's district and subordinate courts held {f['njdg_total'] / 1e7:.2f} crore pending cases in July 2026, up from {f['njdg_2025'] / 1e7:.2f} crore in 2025. "

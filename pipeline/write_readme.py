@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import MART, OUTPUTS, ROOT, SCOPE  # noqa: E402
+from common import LIVE_DASHBOARD, MART, OUTPUTS, REPOSITORY, ROOT, SCOPE  # noqa: E402
 
 PRIVATE = ROOT / "private"  # kept out of git: prep material for the author, not part of the published project
 
@@ -22,6 +22,8 @@ def readme(f: dict, t: dict) -> str:
     return f"""# Where Justice Gets Stuck
 
 Where and why Indian lower courts are delayed, from **{f['total_rows']:,} cases** filed 2010-2018, with 2026 pendency for context.
+
+**[Open the live dashboard]({LIVE_DASHBOARD})** | [Read the two-page brief](outputs/where_justice_gets_stuck_brief.pdf)
 
 Indian district and subordinate courts held {f['njdg_total'] / 1e7:.2f} crore pending cases in July 2026. This project finds where those cases stall, using case-level records and a data-quality layer that documents every problem found along the way.
 
@@ -47,7 +49,7 @@ Every figure has its limits spelled out in [the brief](outputs/where_justice_get
 |---|---|
 | DuckDB + Parquet pipeline: loaders, SQL rules, act-name mapping | [pipeline/](pipeline/), [sql/dq_rules.sql](sql/dq_rules.sql) |
 | Excel data-quality scorecard, with live formulas | [outputs/data_quality_scorecard.xlsx](outputs/data_quality_scorecard.xlsx) |
-| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, what-if calculator | [dashboard/](dashboard/) |
+| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, what-if calculator | [Live]({LIVE_DASHBOARD}), [dashboard/](dashboard/) |
 | Two-page brief with the top findings | [outputs/where_justice_gets_stuck_brief.pdf](outputs/where_justice_gets_stuck_brief.pdf) |
 
 ### Data-management work
@@ -63,7 +65,7 @@ Every figure has its limits spelled out in [the brief](outputs/where_justice_get
 
 ## Run it
 
-The dashboard needs only the small aggregate tables included here:
+The [live dashboard]({LIVE_DASHBOARD}) needs no setup. To run it yourself, it needs only the small aggregate tables included here:
 
 ```
 python -m venv .venv
@@ -83,7 +85,7 @@ Tests: `pytest tests`. They cover the survival estimator against `lifelines`, th
 
 ### Host the dashboard
 
-On [Streamlit Community Cloud](https://streamlit.io/cloud), point a new app at this repository with `dashboard/app.py` as the main file. It installs the short [dashboard/requirements.txt](dashboard/requirements.txt), and no secrets or row-level data are needed. The case data licence is non-commercial, so keep any hosted copy non-commercial too.
+The [live copy]({LIVE_DASHBOARD}) runs on [Streamlit Community Cloud](https://streamlit.io/cloud) and updates when `main` changes. To host your own, point a new app at this repository with `dashboard/app.py` as the main file. It installs the short [dashboard/requirements.txt](dashboard/requirements.txt), and no secrets or row-level data are needed. The case data licence is non-commercial, so keep any hosted copy non-commercial too.
 
 ## How it is built
 
@@ -146,6 +148,8 @@ def resume_line(f: dict) -> str:
         f"Analysed {f['total_rows'] / 1e6:.1f}M Indian court cases (2010-2018) with DuckDB/SQL. Wrote {f.get('dq_rules', 0)} data-quality rules, "
         f"standardized {f.get('act_variants_standardized', 0):,} act-name variants, and identified the case stages and districts driving delay. "
         "Used survival analysis and a district-level dashboard.\n"
+        f"Live dashboard: {LIVE_DASHBOARD}\n"
+        f"Code: {REPOSITORY}\n"
     )
 
 
@@ -153,6 +157,9 @@ def interview_notes(f: dict, t: dict) -> str:
     trial = f["q4_tenure_by_category"]["Criminal trial (magistrate)"]
     sessions = f["q4_tenure_by_category"]["Sessions trial"]
     return f"""# Interview notes
+
+Live dashboard: {LIVE_DASHBOARD}
+Code: {REPOSITORY}
 
 Private prep, kept out of git. Every figure comes from the final build. Read `docs/methods.md` alongside this, and be ready to walk through `pipeline/analysis.py`, `pipeline/km.py` and `sql/dq_rules.sql` yourself, because a good interviewer will ask you to open them.
 

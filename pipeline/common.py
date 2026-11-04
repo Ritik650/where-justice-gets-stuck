@@ -21,6 +21,9 @@ CHARTS = OUTPUTS / "charts"
 
 YEARS = range(2010, 2019)
 
+LIVE_DASHBOARD = "https://where-justice-gets-stuck.streamlit.app/"
+REPOSITORY = "https://github.com/Ritik650/where-justice-gets-stuck"
+
 
 def connect(memory_limit: str = "10GB", threads: int = 12):
     TMP.mkdir(parents=True, exist_ok=True)
