@@ -71,11 +71,11 @@ def export_charts(figures: dict) -> dict[str, tuple[Path, float]]:
     add("coverage_cliff", C.decisions_cliff(monthly, width=660, height=105), 720, 135)
     # Not in the two-page brief, but used by the README and the shareable page.
     outcomes = read("q8_outcomes")
-    add("q8_outcomes", C.outcome_stacks(outcomes[outcomes["dimension"] == "Case category"], width=520, height=300), 660, 370)
+    add("q8_outcomes", C.outcome_stacks(outcomes[outcomes["dimension"] == "Case category"], width=250, height=250), 340, 330)
     hearing = read("q9_first_hearing")
-    add("q9_first_hearing", C.first_hearing_bars(hearing[(hearing["dimension"] == "State") & (hearing["n"] >= 200_000)], width=480, height=400), 660, 460)
+    add("q9_first_hearing", C.first_hearing_bars(hearing[(hearing["dimension"] == "State") & (hearing["n"] >= 200_000)], width=240, height=330), 340, 370)
     model = read("model_hazard_ratios")
-    add("q10_model", C.hazard_forest(model[model["group"] == "State"], width=480), 660, 500)
+    add("q10_model", C.hazard_forest(model[model["group"] == "State"], width=220, height=380), 340, 420)
     return out
 
 
