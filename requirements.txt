@@ -1,0 +1,17 @@
+duckdb>=1.1
+pandas>=2.2
+pyarrow>=17
+requests>=2.32
+numpy>=1.26
+xlsxwriter>=3.2
+openpyxl>=3.1
+streamlit>=1.57
+altair>=5
+reportlab>=4.2
+vl-convert-python>=1.7
+lifelines>=0.30
+
+# Tests and one-off steps
+pytest>=8
+pyshp>=2.3  # only for pipeline/build_geo.py
+shapely>=2.0  # only for pipeline/build_geo.py

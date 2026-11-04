@@ -1,0 +1,25 @@
+# Tokens from the Stitch design system "Informed Ledger" (see docs/design/stitch_design_tokens.md).
+[theme]
+base = "light"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+primaryColor = "#18181B"
+backgroundColor = "#F9F8F6"
+secondaryBackgroundColor = "#F4F2EE"
+textColor = "#18181B"
+borderColor = "#E5E3DF"
+showWidgetBorder = true
+baseRadius = "none"
+buttonRadius = "none"
+linkColor = "#1E40AF"
+baseFontSize = 14
+metricValueFontSize = "1.9rem"
+metricValueFontWeight = 500
+headingFontWeights = [600, 600, 600, 600, 600, 600]
+dataframeHeaderBackgroundColor = "#F4F2EE"
+dataframeBorderColor = "#E5E3DF"
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"

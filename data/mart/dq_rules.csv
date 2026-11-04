@@ -1,0 +1,49 @@
+rule_id,title,dimension,severity,status,grain,ran,failures,checked,failure_rate,worst_state_code,treatment
+C01,Filing date missing,Completeness,High,Mitigated,case,True,0,80935944,0.0,,Excluded from every duration metric because the clock has no start.
+C02,Decided case with no recorded outcome,Completeness,High,Accepted,case,True,159234,59623206,0.002670671550268531,01,Kept in duration metrics. Reported as outcome unknown.
+C03,First hearing date missing,Completeness,Low,Accepted,case,True,3134438,80935944,0.03872739162713664,03,Kept. First-hearing date is not used in duration metrics.
+C04,Last hearing date missing,Completeness,Medium,Mitigated,case,True,567038,80935944,0.007006009591980542,03,Kept. Excluded only from the days-since-last-hearing metric.
+C05,Undecided case with no hearing purpose,Completeness,Medium,Accepted,case,True,313705,21312738,0.014719131816850561,13,Reported in the 'Not a stage / blank' bar of Q1.
+C06,Judge designation missing,Completeness,Low,Accepted,case,True,0,80935944,0.0,,Kept. Designation is descriptive only in this project.
+C07,Petitioner gender not classifiable,Completeness,Low,Accepted,case,True,39598235,80935944,0.48925400808323183,13,"Excluded from the denominator of women's share in Q6, and the excluded share is reported."
+C08,Defendant gender not classifiable,Completeness,Low,Accepted,case,True,17225215,80935944,0.2128252806935816,13,"Excluded from the denominator of women's share in Q6, and the excluded share is reported."
+C09,Petitioner advocate gender not classifiable,Completeness,Low,Accepted,case,True,43897422,80935944,0.5423723976086571,13,"Excluded from the denominator of women's share in Q6, and the excluded share is reported."
+C10,Defendant advocate gender not classifiable,Completeness,Low,Accepted,case,True,70324773,80935944,0.8688942084866521,13,"Excluded from the denominator of women's share in Q6, and the excluded share is reported."
+V01,Decision date before filing date,Validity,High,Mitigated,case,True,345896,59623206,0.005801365327453207,09,Excluded from duration metrics. A negative duration has no meaning.
+V02,Filing date outside the file's year,Validity,Medium,Mitigated,case,True,0,80935944,0.0,,Kept in counts by file year. Excluded from durations when the filing date falls outside 2010-2018.
+V03,Decision dated after data collection ended,Validity,High,Mitigated,case,True,1557,59623206,2.611399326631312e-05,29,"Excluded from duration metrics. The date cannot be real, and the true date is unknown."
+V04,Date earlier than 1950,Validity,Medium,Mitigated,case,True,4471,80935944,5.524121643654394e-05,03,The bad date is ignored. Rows with a bad decision date also fail V01.
+V05,Last or first hearing dated after data collection ended,Validity,Medium,Mitigated,case,True,6914,80935944,8.542558050598631e-05,03,The hearing date is ignored when computing time since last hearing.
+V06,Next hearing more than five years after data collection ended,Validity,Low,Accepted,case,True,19527,80935944,0.0002412648699074913,02,Next-hearing date is not used in any metric.
+V07,Unparseable date string,Validity,Medium,Mitigated,case,True,0,80935944,0.0,,The value is stored as NULL at load.
+V08,Gender code outside the documented values,Validity,Low,Mitigated,case,True,0,80935944,0.0,,Treated as not classifiable.
+V09,Last-hearing date is the placeholder 5000-01-01,Validity,Medium,Mitigated,case,True,1668273,80935944,0.020612263446263133,09,"Read as missing. It is not used in any duration, and the stale-case check compares earlier dates only."
+X01,First hearing before filing,Consistency,Medium,Accepted,case,True,277324,80935944,0.003426462783951714,01,Kept. First-hearing date is not used in duration metrics.
+X02,Last hearing before first hearing,Consistency,Medium,Accepted,case,True,972246,80935944,0.012012536729045873,14,Kept. Time since last hearing uses the last-hearing date alone.
+X03,Last hearing after the decision,Consistency,Medium,Accepted,case,True,602987,59623206,0.01011329380711262,13,Kept. Decision date is used as the end of the case.
+X04,Undecided case with an outcome recorded,Consistency,High,Open,case,True,18861,21312738,0.0008849637245106659,13,Kept as open (censored). Counted separately so pendency can be read with and without them.
+X05,Decided case with a later hearing scheduled,Consistency,Low,Accepted,case,True,2203759,59623206,0.03696143075566919,13,Kept. Next-hearing date is not used in any metric.
+X06,Never-decided case with no hearing in the two years before the cut-off,Consistency,Medium,Open,case,True,51260,21312738,0.002405134431812562,13,"Kept as open. Could be real inactivity or an unclosed record, so it is reported as a stale share."
+X07,Case-ID year differs from the file year,Consistency,Low,Accepted,case,True,6896297,80935944,0.08520685197666936,09,Kept. Case IDs are used only for joining.
+X08,Closed with a generic label such as 'disposed',Consistency,Low,Accepted,case,True,11774962,59623206,0.19748958148946233,13,Kept in duration metrics. Excluded from any outcome reading.
+X09,Closed by transfer or committal rather than a resolution,Consistency,Medium,Mitigated,case,True,4294438,59623206,0.07202628453089222,13,"Counted as closed in the main curves, to match official disposal counts. Removed in the sensitivity curve."
+X10,Decided after the 2018 cut-off,Consistency,Info,Mitigated,case,True,2452161,59623206,0.04112762738722906,13,"Counted as open on the cut-off, because only some courts were collected again after January 2019."
+U01,Duplicate case ID,Uniqueness,High,Mitigated,set,True,0,80935944,0.0,,Only the first row per ID would be kept in the analysis table.
+U02,Rows identical on every field except the ID,Uniqueness,Low,Accepted,set,True,14198889,80935944,0.1754336614644292,13,"Kept. Many are genuine batch filings (one complainant, many cases), which rows alone cannot separate from double entry."
+L01,State code absent from the state key,Linkage,High,Mitigated,set,True,0,80935944,0.0,,The case would stay in national totals and drop out of state views.
+L02,District code absent from the district key,Linkage,High,Mitigated,set,True,927,80935944,1.145350204354199e-05,33,The case stays in state totals and drops out of district views.
+L03,Court code absent from the court key,Linkage,Medium,Accepted,set,True,0,80935944,0.0,,Kept. Court names are not used in the headline metrics.
+L04,Case-type code absent from the type key for that year,Linkage,Medium,Mitigated,set,True,0,80935944,0.0,,Placed in the 'Other / unmapped' case category.
+L05,Purpose code absent from the purpose key for that year,Linkage,Medium,Mitigated,set,True,0,80935944,0.0,,Placed in the 'Not a stage / blank' bar of Q1.
+L06,Case with no act or section record,Linkage,High,Accepted,set,True,14770754,80935944,0.1824993108130054,13,Kept in overall metrics. Shown as 'No act record' in Q3.
+L07,Act record with no matching case,Linkage,Medium,Mitigated,set,True,10646167,76811357,0.13860147009250207,13,"Ignored, because all analysis starts from the case table."
+L08,"Act label blank, not an act name, or implausible",Linkage,Medium,Accepted,set,True,1933443,80935944,0.02388855809231063,03,Shown as its own group in Q3 and never forced into a real act.
+L09,Act label not mapped to a canonical act,Linkage,Low,Open,set,True,1665002,80935944,0.02057184876968878,13,Shown as 'Other / unmapped' in Q3. The mapping table lists every label for review.
+L10,Filed only under a procedural code (CrPC or CPC),Linkage,Medium,Accepted,set,True,16307339,80935944,0.2014845097747918,13,"Kept, but the underlying law cannot be identified, so Q3 reports these separately."
+L11,Criminal case with no judge link,Linkage,Medium,Accepted,set,True,11996036,24522119,0.48919247149889455,08,Excluded from Q4 only. DDL states that links exist only for criminal cases and match 50-75% of them.
+L12,Filing judge missing from the judge table,Linkage,Medium,Mitigated,set,True,1964969,12901145,0.15230965933643875,13,Excluded from the tenure-based part of Q4.
+L13,Filing date outside the filing judge's tenure,Consistency,Medium,Mitigated,set,True,0,10936176,0.0,,Excluded from the tenure-based part of Q4.
+L14,Case in a court with no Census 2011 population link,Linkage,Medium,Accepted,set,True,386146,80935944,0.004771007551354439,01,The state total keeps the case. District per-lakh figures cannot include it (statewide tribunals).
+L15,Judge tenure ends before it starts,Validity,Medium,Mitigated,set,True,0,98478,0.0,,The judge row is excluded from the tenure-based part of Q4.
+L16,Case-type label not mapped to a category,Linkage,Low,Mitigated,set,True,3276009,80935944,0.040476565022828426,13,Shown as 'Other / unmapped' in the survival curves.
+L17,Hearing label says nothing about the stage,Linkage,Low,Accepted,set,True,5485489,80935944,0.06777568443508857,01,Shown as 'Not a stage / blank' in Q1 and never spread across real stages.

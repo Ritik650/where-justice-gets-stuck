@@ -1,0 +1,97 @@
+state_code,dist_code,ddl_name,census_state,census_district,link_type
+02,07,Kadapa,ANDHRA PRADESH,Y.S.R.,renamed
+02,15,Nellore,ANDHRA PRADESH,Sri Potti Sriramulu Nellore,renamed
+08,28,Bettiah,BIHAR,Pashchim Champaran,court_seat
+08,10,Motihari,BIHAR,Purba Champaran,court_seat
+08,13,Rohtas Sasaram,BIHAR,Rohtas,renamed
+08,04,Saran at Chapra,BIHAR,Saran,renamed
+18,19,Balod,CHHATTISGARH,Durg,carved_after_2011
+18,23,Balodabazar,CHHATTISGARH,Raipur,carved_after_2011
+18,25,Balrampur Ramanujganj,CHHATTISGARH,Surguja,carved_after_2011
+18,20,Bemetara,CHHATTISGARH,Durg,carved_after_2011
+18,17,Dantewada,CHHATTISGARH,Dakshin Bastar Dantewada,renamed
+18,18,Janjgir,CHHATTISGARH,Janjgir - Champa,renamed
+18,13,Kanker,CHHATTISGARH,Uttar Bastar Kanker,renamed
+18,09,Kawardha,CHHATTISGARH,Kabeerdham,renamed
+18,22,Kondagaon,CHHATTISGARH,Bastar,carved_after_2011
+18,24,Mungeli,CHHATTISGARH,Bilaspur,carved_after_2011
+18,21,Surajpur,CHHATTISGARH,Surguja,carved_after_2011
+32,01,Silvassa,DADRA AND NAGAR HAVELI,Dadra AND Nagar Haveli,court_seat
+26,02,Shahdara,NCT OF DELHI,North East,carved_after_2011
+17,38,Aravalli at Modasa,GUJARAT,Sabar Kantha,carved_after_2011
+17,43,BOTAD,GUJARAT,Bhavnagar,carved_after_2011
+17,19,Banaskanth at Palanpur,GUJARAT,Banas Kantha,renamed
+17,41,Chhota Udepur,GUJARAT,Vadodara,carved_after_2011
+17,40,Devbhumi Dwarka at Khambhaliya,GUJARAT,Jamnagar,carved_after_2011
+17,37,Gir Somnath at Veraval,GUJARAT,Junagadh,carved_after_2011
+17,25,Kheda at Nadiad,GUJARAT,Kheda,renamed
+17,39,MORBI,GUJARAT,Rajkot,carved_after_2011
+17,42,Mahisagar at Lunawada,GUJARAT,Panch Mahals,carved_after_2011
+17,27,Panchmahal at Godhra,GUJARAT,Panch Mahals,renamed
+17,29,Sabarkantha at Himmatnagar,GUJARAT,Sabar Kantha,renamed
+17,26,kachchh at Bhuj,GUJARAT,Kachchh,renamed
+14,06,Gurugram,HARYANA,Gurgaon,renamed
+14,11,Narnaul,HARYANA,Mahendragarh,court_seat
+14,19,Nuh,HARYANA,Mewat,renamed
+12,16,Leh,JAMMU AND KASHMIR,Leh(Ladakh),renamed
+07,17,Daltonganj,JHARKHAND,Palamu,court_seat
+07,11,East Singhbhum at Jamshedpur,JHARKHAND,Purbi Singhbhum,renamed
+07,15,Seraikella,JHARKHAND,Saraikela-Kharsawan,renamed
+07,04,West Singhbhum at Chaibasa,JHARKHAND,Pashchimi Singhbhum,renamed
+03,01,BELAGAVI,KARNATAKA,Belgaum,renamed
+03,04,KALABURAGI,KARNATAKA,Gulbarga,renamed
+03,03,VIJAYAPURA,KARNATAKA,Bijapur,renamed
+04,13,Lakshadweep,LAKSHADWEEP,Lakshadweep,listed_under_other_state
+23,10,Khandwa,MADHYA PRADESH,Khandwa (East Nimar),renamed
+23,16,Mandleshwar,MADHYA PRADESH,Khargone (West Nimar),court_seat
+23,02,Narsinghpur,MADHYA PRADESH,Narsimhapur,renamed
+01,41,Mah State Cooperative Appellat,,,non_territorial
+01,40,Maharashtra Industrial and Lab,,,non_territorial
+01,42,Maharashtra-Family Courts,,,non_territorial
+01,43,Maharashtra-School Tribunals,,,non_territorial
+01,23,Mumbai CMM Courts,MAHARASHTRA,Mumbai,court_seat
+01,37,Mumbai City Civil Court,MAHARASHTRA,Mumbai,court_seat
+01,39,Mumbai Motor Accident Claims T,MAHARASHTRA,Mumbai,court_seat
+01,38,Mumbai Small Causes Court,MAHARASHTRA,Mumbai,court_seat
+21,03,West Jaintia Hills,MEGHALAYA,Jaintia Hills,carved_after_2011
+11,05,Balasore,ORISSA,Baleshwar,renamed
+11,13,Keonjhar,ORISSA,Kendujhar,renamed
+11,20,Sonepur,ORISSA,Subarnapur,renamed
+22,26,Fazilka,PUNJAB,Firozpur,carved_after_2011
+22,06,Ferozepur,PUNJAB,Firozpur,renamed
+22,24,Mohali,PUNJAB,Sahibzada Ajit Singh Nagar,renamed
+22,21,Pathankot,PUNJAB,Gurdaspur,carved_after_2011
+22,15,SBS Nagar,PUNJAB,Shahid Bhagat Singh Nagar,renamed
+22,14,Sri Muktsar Sahib,PUNJAB,Muktsar,renamed
+09,27,Balotra Barmer,RAJASTHAN,Barmer,court_seat
+09,38,Jaipur District,RAJASTHAN,Jaipur,court_seat
+09,04,Jaipur Metro,RAJASTHAN,Jaipur,court_seat
+09,40,Jaipur Metro II,RAJASTHAN,Jaipur,court_seat
+09,39,Jodhpur District,RAJASTHAN,Jodhpur,court_seat
+09,28,Jodhpur Metro,RAJASTHAN,Jodhpur,court_seat
+09,08,Merta (Nagaur),RAJASTHAN,Nagaur,court_seat
+24,04,Gangtok,SIKKIM,East District,court_seat
+24,03,Gyalshing,SIKKIM,West District,court_seat
+24,02,Mangan,SIKKIM,North  District,court_seat
+24,01,Namchi,SIKKIM,South District,court_seat
+10,28,Puducherry,PONDICHERRY,PONDICHERRY,listed_under_other_state
+20,11,Dhalai Tripura,TRIPURA,Dhalai,renamed
+20,06,Gomati District,TRIPURA,South Tripura,carved_after_2011
+20,10,Khowai Tripura,TRIPURA,West Tripura,carved_after_2011
+20,09,Sepahijala Tripura,TRIPURA,West Tripura,carved_after_2011
+20,05,Unakoti  Tripura,TRIPURA,North Tripura,carved_after_2011
+13,22,Bhadohi SR Nagar,UTTAR PRADESH,Sant Ravidas Nagar (Bhadohi),renamed
+13,73,Hapur,UTTAR PRADESH,Ghaziabad,carved_after_2011
+13,65,Hathras,UTTAR PRADESH,Mahamaya Nagar,renamed
+13,10,Lakhimpur,UTTAR PRADESH,Kheri,renamed
+13,74,Sambhal at Chandausi,UTTAR PRADESH,Moradabad,carved_after_2011
+13,76,Shamli,UTTAR PRADESH,Muzaffarnagar,carved_after_2011
+15,02,Pauri Garhwal,UTTARAKHAND,Garhwal,renamed
+16,03,Calcutta,WEST BENGAL,Kolkata,renamed
+16,06,Coochbehar,WEST BENGAL,Koch Bihar,renamed
+16,25,Jhargram,WEST BENGAL,Paschim Medinipur,carved_after_2011
+16,21,North Dinajpur,WEST BENGAL,Uttar Dinajpur,renamed
+16,24,Paschim Bardhaman,WEST BENGAL,Barddhaman,carved_after_2011
+16,18,Purba Bardhaman,WEST BENGAL,Barddhaman,carved_after_2011
+16,13,South Dinajpur,WEST BENGAL,Dakshin Dinajpur,renamed
+16,23,kalimpong,WEST BENGAL,Darjiling,carved_after_2011

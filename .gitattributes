@@ -1,0 +1,13 @@
+* text=auto
+# Binary files must never have their line endings changed, or they are corrupted on checkout.
+*.pdf binary
+*.png binary
+*.xlsx binary
+*.parquet binary
+*.shp binary
+*.dbf binary
+*.shx binary
+# Shell scripts and data files keep the same bytes on every platform.
+*.csv text eol=lf
+*.geojson text eol=lf
+*.json text eol=lf

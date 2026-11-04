@@ -1,0 +1,350 @@
+{
+ "figures": {
+  "total_rows": 80935944,
+  "usable_rows": 80588491,
+  "unusable_rows": 347453,
+  "closed_by_cutoff": 56823592,
+  "open_at_cutoff": 23764899,
+  "never_decided": 21312738,
+  "decided_after_cutoff": 2452161,
+  "q1_stuck": 21312738,
+  "q1_top_stage": "Evidence",
+  "q1_top_share": 0.219802307896808,
+  "q1_pretrial_share": 0.37621191608511306,
+  "q1_pretrial_cases": 8018106,
+  "q1_pretrial_share_criminal": 0.4128812387943185,
+  "q1_pretrial_share_civil": 0.3011888631217074,
+  "q1_blank_share": 0.054406336717506686,
+  "q2_km_median": 450.0,
+  "q2_naive_median": 181.0,
+  "q2_ratio": 2.4861878453038675,
+  "q2_open_1y": 0.537283888470745,
+  "q2_open_3y": 0.30640216953926414,
+  "q2_open_5y": 0.1853273090555054,
+  "q2_categories": {
+   "Criminal trial (magistrate)": 633.0,
+   "Other / unmapped": 538.0,
+   "Sessions trial": 590.0,
+   "Bail": 9.0,
+   "Criminal misc. / appeal": 73.0,
+   "Family / matrimonial": 409.0,
+   "Civil misc. / appeal": 486.0,
+   "Motor accident claim": 612.0,
+   "Civil suit": 983.0,
+   "Traffic / petty offence": 26.0,
+   "Cheque bounce (NI Act)": 740.0,
+   "Execution": 737.0
+  },
+  "q2_slowest_state": "Bihar",
+  "q2_slowest_state_km": 1870.0,
+  "q2_slowest_state_naive": 139.0,
+  "q2_fastest_state": "Karnataka",
+  "q2_fastest_state_km": 182.0,
+  "q2_cohort_2010": 1138.0,
+  "q2_cohort_2018": 228.0,
+  "q2_no_transfer_median": 512.0,
+  "q3_top_open": [
+   {
+    "act": "Indian Penal Code",
+    "open": 7580339,
+    "share": 0.3189720688482623
+   },
+   {
+    "act": "Code of Civil Procedure",
+    "open": 3947941,
+    "share": 0.16612488022776786
+   },
+   {
+    "act": "Negotiable Instruments Act",
+    "open": 1957986,
+    "share": 0.08238983048065973
+   }
+  ],
+  "q3_slowest": [
+   {
+    "act": "Specific Relief Act",
+    "km_median_days": 1396.0,
+    "n": 522620
+   },
+   {
+    "act": "Arms Act",
+    "km_median_days": 1345.0,
+    "n": 392850
+   },
+   {
+    "act": "Land Acquisition Act",
+    "km_median_days": 1012.0,
+    "n": 306392
+   }
+  ],
+  "q3_no_act_share": 0.18213599507651781,
+  "act_named_share": 0.9455474009529236,
+  "q3_ni_open": 1957986,
+  "q3_ni_open_widest": 2012367,
+  "q3_ni_section_138_open": 1778876,
+  "q3_ni_cases": 4470818,
+  "q3_ni_share_of_open": 0.08238983048065973,
+  "q3_sc_benchmark": 3516000,
+  "q3_blog_benchmark": 5400000,
+  "q3_ni_km": 740.0,
+  "q4_same_median": 13.0,
+  "q4_changed_median": 516.0,
+  "q4_same_n": 5751816,
+  "q4_changed_n": 1535058,
+  "q4_pairs": 5982,
+  "q4_pair_gap": 380.25,
+  "q4_pairs_slower": 0.9958207957204949,
+  "q4_trial_pair_gap": 464.0,
+  "q4_tenure_strata": 1712,
+  "q4_tenure_cases": 1182026,
+  "q4_tenure_gap": -0.017613101076073744,
+  "q4_tenure_by_category": {
+   "Bail": {
+    "gap": 4.315765115905539e-05,
+    "stays": 0.9992478316154499,
+    "leaves": 0.9992909892666089
+   },
+   "Criminal misc. / appeal": {
+    "gap": -0.0010597169268893782,
+    "stays": 0.8696804466558714,
+    "leaves": 0.8686207297289821
+   },
+   "Criminal trial (magistrate)": {
+    "gap": -0.028950761809193093,
+    "stays": 0.5375010721873733,
+    "leaves": 0.5085503103781802
+   },
+   "Sessions trial": {
+    "gap": -0.05421627888796296,
+    "stays": 0.6348605836235083,
+    "leaves": 0.5806443047355453
+   }
+  },
+  "q5_units": 592,
+  "q5_flagged": 9,
+  "q5_flagged_names": [
+   "Bara Banki (Uttar Pradesh)",
+   "Bhojpur (Bihar)",
+   "Chandauli (Uttar Pradesh)",
+   "Gaya (Bihar)",
+   "Jehanabad (Bihar)",
+   "Karbi Anglong (Assam)",
+   "Muzaffarpur (Bihar)",
+   "Sheohar (Bihar)",
+   "Vaishali (Bihar)"
+  ],
+  "q5_flagged_by_state": {
+   "Bihar": 6,
+   "Uttar Pradesh": 2,
+   "Assam": 1
+  },
+  "q5_ranked_units": 558,
+  "q5_p10": 183.5,
+  "q5_p90": 1200.0,
+  "q5_spread": 6.539509536784741,
+  "q5_clearing": 55,
+  "q5_between_state_share": 0.671444635552916,
+  "q5_widest_state": "Jharkhand",
+  "q5_widest_low": 0.03633952752416832,
+  "q5_widest_high": 0.6263041151389834,
+  "q5_slowest": {
+   "district": "Supaul",
+   "state": "Bihar",
+   "km_median_days": 2794.0
+  },
+  "q5_fastest": {
+   "district": "South District",
+   "state": "Sikkim",
+   "km_median_days": 16.0
+  },
+  "q5_state_excl_flagged": {
+   "Uttar Pradesh": 644.0,
+   "Assam": 354.0,
+   "Bihar": 1548.0
+  },
+  "q6_roles": {
+   "Defendant": {
+    "share": 0.15045844162291724,
+    "classified": 0.7871747193064185
+   },
+   "Defendant's advocate": {
+    "share": 0.07497466584979169,
+    "classified": 0.1311057915133479
+   },
+   "Petitioner": {
+    "share": 0.29419329939160394,
+    "classified": 0.5107459919167682
+   },
+   "Petitioner's advocate": {
+    "share": 0.11009084001786032,
+    "classified": 0.457627602391343
+   }
+  },
+  "q6_advocates_share": 0.10227077433636352,
+  "q6_family_petitioner": 0.522350050838166,
+  "q7_national_clearance": 0.8522408987822253,
+  "q7_states_in_ddl": 31,
+  "q7_never": 28,
+  "q7_clearing_states": [
+   "Sikkim",
+   "The Dadra and Nagar Haveli and Daman and Diu",
+   "Tripura"
+  ],
+  "q7_national_years": 4.600595834126705,
+  "q7_top": [
+   {
+    "state": "Bihar",
+    "years": 13.020098885412906
+   },
+   {
+    "state": "West Bengal",
+    "years": 12.785788359331116
+   },
+   {
+    "state": "Odisha",
+    "years": 10.957586113191022
+   }
+  ],
+  "q7_bottom": [
+   {
+    "state": "Gujarat",
+    "years": 2.160118943845004
+   },
+   {
+    "state": "Punjab",
+    "years": 2.081178620528913
+   }
+  ],
+  "q7_not_in_ddl": [
+   "Andaman and Nicobar",
+   "Arunachal Pradesh",
+   "Lakshadweep",
+   "Nagaland",
+   "Puducherry"
+  ],
+  "q4_tenure_median_days": 331.0,
+  "judges_sanctioned": 30825,
+  "judges_working": 21411,
+  "judges_vacant_share": 0.30540145985401457,
+  "q8_shares": {
+   "Plea or admission": 0.04453843748561337,
+   "Withdrawn or lapsed": 0.0730230676019214,
+   "Transferred or committed": 0.0695154751920646,
+   "Settled or Lok Adalat": 0.09903689298627937,
+   "Vague or missing label": 0.20349422824238214,
+   "Decided on merits": 0.5103918984917392
+  },
+  "q8_ni_merits": 0.25088540734274445,
+  "q8_ni_settled_or_withdrawn": 0.3660642144097623,
+  "q8_verdict_share": 0.30132368540490184,
+  "q8_verdict_low": {
+   "state": "Goa",
+   "share": 7.878420219177651e-06
+  },
+  "q8_verdict_high": {
+   "state": "Kerala",
+   "share": 0.6785196794454673
+  },
+  "q9_median": 30.0,
+  "q9_p90": 416.0,
+  "q9_unusable_share": 0.038585497276527936,
+  "q9_fast": {
+   "state": "Punjab",
+   "days": 1.0
+  },
+  "q9_slow": {
+   "state": "Odisha",
+   "days": 122.0
+  },
+  "q10_rows": 300000,
+  "q10_concordance": 0.7046479284620799,
+  "q10_shift": 0.010738161883196306,
+  "q10_slow": [
+   {
+    "state": "Bihar",
+    "ratio": 0.42805739459262365
+   },
+   {
+    "state": "Odisha",
+    "ratio": 0.4302311196722276
+   }
+  ],
+  "q10_fast": {
+   "state": "Karnataka",
+   "ratio": 1.7061379674719188
+  },
+  "q10_state_spread": 3.9857691726027227,
+  "q10_bail": 8.708292055673224,
+  "q10_def_advocate": 0.7906026908681866,
+  "q10_woman_petitioner": 0.912290051889711,
+  "cov_corr": 0.9768864009004726,
+  "cov_2010": 4281327,
+  "cov_2018": 13724299,
+  "cov_growth": 3.205618024505019,
+  "cov_age_spearman": 0.6339130434782608,
+  "cov_age_states": 24,
+  "njdg_total": 49911920,
+  "njdg_jul28": 49916653,
+  "njdg_2025": 47657328,
+  "dq_rules": 48,
+  "dq_failed": 36,
+  "dq_passed": 12,
+  "act_variants_total": 29856,
+  "act_variants_standardized": 17964,
+  "canonical_acts": 60,
+  "stage_labels": 15689,
+  "type_labels": 11499
+ },
+ "text": {
+  "q1": {
+   "question": "Where do cases get stuck?",
+   "finding": "38% of cases that never closed (80.2 lakh) were last listed for admission, summons, notice or appearance: the steps that get parties to court. Evidence is the largest single stage at 22%. Criminal cases sit in those early steps more often than civil ones (41% against 30%).",
+   "caveat": "Stage comes from the free-text purpose of the last listing, which is not always the furthest point a case reached: an appearance can recur mid-trial. 5% of labels say nothing about the stage and get their own bar."
+  },
+  "q2": {
+   "question": "How long does justice take?",
+   "finding": "Half of all cases take more than 450 days to close once open cases are counted. Closed cases alone say 181 days, which understates it 2.5 times. 19% of cases are still open after five years. Civil suits take a median of 983 days, while bail takes 9.",
+   "caveat": "Older filings look slower (1,138 days for 2010 against 228 for 2018), probably because early digital records lean towards long-running cases. Not counting transfers as closures raises the median to 512 days."
+  },
+  "q3": {
+   "question": "Which laws clog the system?",
+   "finding": "The Indian Penal Code holds the most open cases (75.8 lakh), followed by the Code of Civil Procedure (39.5 lakh). Among large groups, Specific Relief Act cases are slowest at a median 3.8 years. Section 138 (cheque bounce) is the largest single section by volume, with 19.6 lakh NI Act cases filed 2010-2018 still open at the end of 2018 (8% of all open cases). That fits the Supreme Court's 35.2 lakh for end-2019, which also counts older cases, but this data alone cannot confirm it.",
+   "caveat": "18% of cases have no act record, mostly early filings, so act volumes are undercounts. Counting cases by type label too raises the NI Act figure to 20.1 lakh."
+  },
+  "q4": {
+   "question": "Do judge transfers slow cases?",
+   "finding": "Much less than it first appears. Cases that changed judges took a median 516 days against 13, and matched trials still differ by 464 days, but slow cases simply have more time to see a transfer. A fairer test uses what a slow case cannot influence: how long the judge had left at filing. With a judge about to leave, the share closed within two years was 2.9 points lower in magistrate trials and 5.4 points lower in sessions trials.",
+   "caveat": "A real but modest effect, within matched district, case type and year groups. Judge links cover only cases DDL flags as criminal, and tenure ends can still cluster with other changes in a court, so this is an association rather than proof of cause."
+  },
+  "q5": {
+   "question": "Does your district decide your speed of justice?",
+   "finding": "Yes: a slow district (90th percentile) takes 6.5 times as long as a fast one (10th percentile), 1,200 days against 184. States explain 67% of the variation after adjusting for case mix, so districts matter but states matter more. Only 55 of 558 districts disposed of as many cases as were filed in 2016-18.",
+   "caveat": "9 districts (6 in Bihar, 2 in Uttar Pradesh, 1 in Assam) are left off because even bail appears not to close there, which suggests missing closure records rather than slow courts. Without its flagged districts, Bihar's median falls to 4.2 years. Per-lakh figures use 2011 population, and court complexes serve people from outside their district."
+  },
+  "q6": {
+   "question": "How visible are women in court?",
+   "finding": "Women are 29% of named petitioners and 15% of defendants, but only about 10% of advocates. Family cases are the exception among litigants, with women as 52% of petitioners.",
+   "caveat": "Gender is predicted from names and counts cases, not people, so one busy advocate counts many times. Only 13% of defendants' advocates and 46% of petitioners' advocates have a classifiable name."
+  },
+  "q7": {
+   "question": "When would the backlog clear?",
+   "finding": "On 2016-18 flows, it would not: filings outran recorded disposals in 28 of 31 states. Even if filings stopped, the 2026 backlog equals 4.6 years of disposals nationally, led by Bihar (13.0), West Bengal (12.8) and Odisha (11.0).",
+   "caveat": "This is a scenario and not a forecast. It applies 2016-18 flows to 2026 pendency, and DDL omits disposals of pre-2010 cases, so 'never clears' is overstated. The ranking between states is sturdier than any single figure."
+  },
+  "q8": {
+   "question": "How do cases end?",
+   "finding": "Only 51% of closures are decided on the merits. 20% carry a label too vague to say how the case ended, 10% are settled or sent to Lok Adalat, and 7% are withdrawn or lapse. Cheque-bounce cases stand out: only 25% end on the merits, while 37% are settled or withdrawn.",
+   "caveat": "Outcome labels are too uneven to compare states: 68% of criminal closures in Kerala record a conviction or acquittal, against 0% in Goa. So verdicts are shown by case type and never ranked by state."
+  },
+  "q9": {
+   "question": "How long until the first hearing?",
+   "finding": "Half of cases get a first hearing within 30 days, but one in ten waits more than 416 days. Among large states the median runs from 1 day in Punjab to 122 days in Odisha.",
+   "caveat": "This uses the recorded first-listing date, which can be a routine listing and not a substantive hearing. 4% of cases have no usable date and are left out."
+  },
+  "q10": {
+   "question": "What drives delay?",
+   "finding": "Case mix does not explain the gaps between states. With case type, filing year and the people involved held constant, a case closes at 0.43 times the rate of a comparable Maharashtra case in Bihar and 0.43 in Odisha, against 1.71 in Karnataka: a 4.0-fold gap. Cases with a named defendant's advocate close 21% more slowly, and those with a woman petitioner 9% more slowly.",
+   "caveat": "A Cox model on a random sample of 3 lakh cases, with a concordance of 0.70; a second sample moved the ratios by a median of 1.1%. A ratio averages over time, and the data has no judge numbers or caseload per judge. These are associations: a named advocate often marks a contested case."
+  }
+ }
+}

@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+logs/
+# Prep notes for the author, not part of the published project.
+private/
+# Raw and row-level data are large and licensed separately. Fetch them with pipeline/download_ddl.py.
+data/raw/
+data/parquet*/
+data/mart_*/
+data/tmp/
+outputs_*/
+# The source shapefile is 10 MB. data/geo holds the small version the map uses.
+data/external/2011_Dist.*
+*.duckdb
+*.duckdb.wal
