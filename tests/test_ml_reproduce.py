@@ -44,3 +44,15 @@ def test_every_logged_run_has_versions_and_runtime():
         assert exp[column].notna().all(), column
     grid = exp[exp["stage"] == "grid"]
     assert grid["test_auc"].isna().all(), "grid candidates must never be scored on the test set"
+
+
+@built
+def test_whatif_scores_every_court_on_a_case_mix_and_checks_itself():
+    import pandas as pd
+    wi = pd.read_parquet(FIXTURE.mart / "ml_whatif.parquet")
+    assert len(wi) and wi["p_model"].between(0, 1).all()
+    assert set(wi["case_mix"]) <= {"state", "national"}
+    floor = FIXTURE.cfg["whatif"]["observed_min_cases"]
+    assert wi.loc[wi["test_cases"] < floor, ["observed_rate", "mean_p_actual_cases"]].isna().all().all(), "small groups stay unpublished"
+    check = json.loads(FIXTURE.results_path.read_text())["whatif_check"]
+    assert check["groups"] == int((wi["test_cases"] >= floor).sum())

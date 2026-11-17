@@ -86,7 +86,7 @@ with right:
     show((diagonal + line + dots).properties(height=260),
          f"Ten groups of {year} test cases by predicted chance. Points on the grey diagonal are well calibrated.")
 
-st.subheader("What-if: a typical case in one court")
+st.subheader("What-if: a case filed in one court")
 whatif = table("ml_whatif")
 pick = st.columns(4)
 states = sorted(whatif["state_name"].dropna().unique())
@@ -105,10 +105,24 @@ preferred = next((t for t in ("Criminal trial (magistrate)", "Civil suit") if t 
 case_type = pick[3].selectbox("Case type", types, index=types.index(preferred), key="wi_type")
 row = in_court[in_court["case_type"] == case_type].iloc[0]
 
+mix = summary["whatif"]
+first, last = mix["train_years"]
+source = (f"{mix['cases']} {state} cases of this type filed {first}-{last}" if row["case_mix"] == "state"
+          else f"{mix['cases']} cases of this type filed {first}-{last} across India ({state} has too few of its own)")
+
 result, bars = st.columns([1, 2], gap="large")
 with result:
     st.metric("Chance of a decision within 24 months", chance(row["p_model"]), border=True,
               delta=f"Model (M2), filed July {year}", delta_color="off", delta_arrow="off")
+    # What this court's real cases of the type did, published only when there are enough of them to compare.
+    if pd.notna(row["observed_rate"]):
+        st.caption(f"This court's {year} cases of this type: {row['test_cases']:,} cases, {row['observed_rate']:.0%} decided "
+                   f"within 24 months, model average {row['mean_p_actual_cases']:.0%}.")
+    elif row["test_cases"]:
+        st.caption(f"This court's {year} cases of this type: {row['test_cases']:,}, too few to compare "
+                   f"(at least {mix['observed_min_cases']} are needed).")
+    else:
+        st.caption(f"This court has no {year} cases of this type in the sample to compare with.")
 with bars:
     observed = (f"Observed in the {year} sample ({row['test_cases']:,} cases)" if pd.notna(row["observed_rate"]) else None)
     values = pd.DataFrame([
@@ -123,9 +137,10 @@ with bars:
         tooltip=[alt.Tooltip("what:N", title="Estimate"), alt.Tooltip("value:Q", title="Chance", format=".1%")])
     text = alt.Chart(values).mark_text(align="left", dx=5, font=C.FONT, fontSize=10, color=C.BODY).encode(x=x, y=y, text=alt.Text("value:Q", format=".0%"))
     show((bar + text).properties(height=34 * len(values) + 30),
-         f"A typical {case_type.lower()} case: the most common act, section and parties for this type in training, filed in July {year} with "
-         f"the court's history as of the end of {year - 1}. B1 and B2 are disposal rates mapped onto the same chance with 2015 data.",
-         alt_text=f"Chance of a decision within 24 months for a typical {case_type} case in the chosen court, by estimate")
+         f"Model: the average chance over {source}, each with its own act, section and parties, as if filed in this court in "
+         f"July {year} with the court's history as of the end of {year - 1}. B1 and B2 are disposal rates mapped onto the same "
+         "chance with 2015 data.",
+         alt_text=f"Chance of a decision within 24 months for a {case_type} case in the chosen court, by estimate")
 
 st.subheader("Where the model is weakest")
 slices = table("ml_slices")
@@ -140,4 +155,4 @@ st.dataframe(shown[["slice", "n", "positive_rate", "auc_m2", "auc_b1", "auc_gap"
                  "auc_gap": st.column_config.NumberColumn("Gain", format="%+.3f"),
              })
 st.caption(f"Slices with at least 1,000 test cases and 100 of each outcome, weakest first. Run `{summary['m2_run_id']}`, "
-           f"evaluation `{summary['evaluation_run_id']}` in reports/experiments.csv. {SOURCES}")
+           f"evaluation `{summary['evaluation_run_id']}` in reports/experiments.csv, from commit `{summary['git_commit']}`. {SOURCES}")

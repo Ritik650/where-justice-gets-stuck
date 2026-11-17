@@ -48,6 +48,12 @@ evaluate:
   slice_min_class: 100          # ... and this many of each class to be ranked
   calibration_bins: 10
 
+# The dashboard's what-if: every court scored on a case mix drawn from its state's training cases.
+whatif:
+  cases: 200                    # training cases sampled per state x case type; the model's chances are averaged over them
+  min_state_cases: 200          # a state with fewer training cases of a type is scored on the national sample instead
+  observed_min_cases: 30        # a court's observed test-year outcomes are published only for at least this many cases
+
 tracking:
   mlflow: true                  # also log to a local MLflow store (mlruns/); experiments.csv is always written
 

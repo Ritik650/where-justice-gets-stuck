@@ -8,7 +8,8 @@
     unseen courts  the same metrics on courts held out of training entirely
     importance     permutation importance on test (AUC drop) and mean absolute SHAP values from LightGBM itself
     errors         the 50 largest false positives and false negatives, with what happened to each case after filing
-    what-if        a typical case of each type, scored in every court, for the dashboard
+    what-if        every court scored on its state's case mix for each type, for the dashboard, and checked against
+                   what the court's own test-year cases did
 
 Writes reports/ml_results.json (every number the report quotes), CSV tables and the dashboard's mart tables, and logs
 one `evaluation` row in experiments.csv so the interval and threshold figures trace to a logged run too.
@@ -26,12 +27,12 @@ from sklearn.isotonic import IsotonicRegression
 from sklearn.metrics import roc_auc_score
 
 from .db import connect
-from .features import FEATURES, feature_version, whatif_path
+from .features import FEATURES, feature_version, whatif_path, whatif_profiles_path
 from .metrics import binary_metrics, bootstrap_auc_gap, calibration_table, delay_flags_at, slice_auc, threshold_for_share
 from .settings import Settings, load
 from .split import split_version
 from .tracking import Timer, Tracker
-from .train import CASE, lgb_matrix
+from .train import CASE_DETAIL, NATIONAL, lgb_matrix
 
 MODELS = {"b0": "B0 majority class", "b1": "B1 court prior-year rate", "b2": "B2 court x case-type prior-year rate",
           "b1b": "B1b court 24-month rate, 3-year-old cohort", "m1": "M1 logistic regression", "m2": "M2 LightGBM",
@@ -219,39 +220,46 @@ def error_cases(s: Settings, test: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataF
     return table, summary
 
 
-MIN_CELL = 20  # the smallest court x case-type group whose observed outcomes are published
-
-
-def suppress_small_cells(table: pd.DataFrame) -> None:
-    """Blank observed outcomes for groups under MIN_CELL test cases, so no published cell describes one or two cases."""
-    small = table["test_cases"] < MIN_CELL
+def suppress_small_cells(table: pd.DataFrame, min_cases: int) -> None:
+    """Blank observed outcomes for groups under `min_cases` test cases: too few to compare, and no published cell
+    should describe one or two cases."""
+    small = table["test_cases"] < min_cases
     table.loc[small, ["observed_rate", "mean_p_actual_cases"]] = np.nan
 
 
 def whatif(s: Settings, test: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> pd.DataFrame:
-    """Score a typical case of each type in every court, using the court's history as of the test year."""
+    """Score every court and case type on its state's case mix, using the court's history as of the test year."""
     path = whatif_path(s)
     if not path.exists():
         return pd.DataFrame()
     base = pd.read_parquet(path)
-    typical = json.loads((s.models_dir / "typical_case.json").read_text())
+    profiles = pd.read_parquet(whatif_profiles_path(s))
     meta = json.loads((s.models_dir / "m2_meta.json").read_text())
     booster = lgb.Booster(model_file=str(s.models_dir / "m2_lgbm.txt"))
     with open(s.models_dir / "m2_isotonic.pkl", "rb") as fh:
         iso = pickle.load(fh)
-    base = base[base["case_type"].isin(typical)].copy()
-    for c in CASE:
-        if c != "case_type":
-            base[c] = base["case_type"].map(lambda t, c=c: typical[t][c])
+    for c in ("state", "district", "court", "court_level", "case_type"):
+        base[c] = base[c].astype(str)
+    base = base[base["case_type"].isin(set(profiles["case_type"]))].reset_index(drop=True)
     year = int(s.cfg["split"]["test_year"])
     base["filing_year"], base["filing_month"], base["filing_weekday"] = year, 7, 3
     base["log_court_filings_py"] = np.log1p(base["court_filings_py"])
     base["log_court_pending_at_filing"] = np.log1p(base["court_pending_at_filing"])
     base["court_backlog_months"] = base["court_pending_at_filing"] / (base["court_decided_prev_12m"] / 12 + 1)
-    for c in ("state", "district", "court", "court_level"):
-        base[c] = base[c].astype(str)
-    raw = booster.predict(lgb_matrix(base, FEATURES, meta["categories"]))
-    base["p_model"] = iso.predict(raw)
+    # Each court is scored once per profile in its state's mix for the type (the national mix when the state has none),
+    # and the calibrated chances are averaged with the profiles' weights.
+    own = set(zip(profiles["state"], profiles["case_type"]))
+    base["mix"] = [st if (st, t) in own else NATIONAL for st, t in zip(base["state"], base["case_type"])]
+    base["row"] = np.arange(len(base))
+    mixes = {key: g[CASE_DETAIL + ["weight"]] for key, g in profiles.groupby(["state", "case_type"])}
+    scored = []
+    for key, b in base.drop(columns=[c for c in CASE_DETAIL if c in base]).groupby(["mix", "case_type"]):
+        x = b.merge(mixes[key], how="cross")
+        p = iso.predict(booster.predict(lgb_matrix(x, FEATURES, meta["categories"])))
+        scored.append(pd.DataFrame({"row": x["row"].to_numpy(), "pw": p * x["weight"].to_numpy(), "w": x["weight"].to_numpy()}))
+    total = pd.concat(scored).groupby("row")[["pw", "w"]].sum()
+    base["p_model"] = (total["pw"] / total["w"]).reindex(base["row"]).to_numpy()
+    base["case_mix"] = np.where(base["mix"] == NATIONAL, "national", "state")
     base["b1_rate"] = base["court_disp_rate_py"].fillna(base["district_disp_rate_py"]).fillna(base["state_disp_rate_py"])
     base["b2_rate"] = base["court_type_disp_rate_py"].fillna(base["b1_rate"])
     # A disposal rate is the share of a year's workload decided, not the chance of a decision within 24 months. Map
@@ -264,13 +272,25 @@ def whatif(s: Settings, test: pd.DataFrame, preds: dict[str, pd.DataFrame]) -> p
                                                           mean_p_actual_cases=("m2_p", "mean")).reset_index())
     base = base.merge(observed, on=["court", "case_type"], how="left")
     base["test_cases"] = base["test_cases"].fillna(0).astype(int)
-    suppress_small_cells(base)
+    suppress_small_cells(base, int(s.cfg["whatif"]["observed_min_cases"]))
     dims = pd.read_parquet(s.source / "maps" / "dim_district.parquet")[["state_code", "dist_code", "state_name", "district_name"]]
     dims["district"] = dims["state_code"] + "-" + dims["dist_code"]
     base = base.merge(dims[["district", "state_name", "district_name"]].drop_duplicates("district"), on="district", how="left")
-    keep = ["state", "state_name", "district", "district_name", "court", "court_name", "court_level", "case_type", "p_model",
+    keep = ["state", "state_name", "district", "district_name", "court", "court_name", "court_level", "case_type", "case_mix", "p_model",
             "p_b1", "p_b2", "b1_rate", "b2_rate", "court_type_share_py", "court_pending_at_filing", "test_cases", "observed_rate", "mean_p_actual_cases"]
     return base[keep].sort_values(["state_name", "district_name", "court_name", "case_type"]).reset_index(drop=True)
+
+
+def whatif_check(wi: pd.DataFrame) -> dict:
+    """How far the what-if lands from what courts' real test-year cases did, next to the model's own average on those
+    cases, over every court and case type whose observed outcomes are published."""
+    shown = wi.dropna(subset=["observed_rate"])
+    off_whatif = shown["p_model"] - shown["observed_rate"]
+    off_cases = shown["mean_p_actual_cases"] - shown["observed_rate"]
+    return {"groups": int(len(shown)), "state_mix_share": float((wi["case_mix"] == "state").mean()),
+            "whatif_mae": float(off_whatif.abs().mean()), "model_on_cases_mae": float(off_cases.abs().mean()),
+            "whatif_share_off_20": float((off_whatif.abs() > 0.2).mean()), "model_on_cases_share_off_20": float((off_cases.abs() > 0.2).mean()),
+            "whatif_bias": float(off_whatif.mean()), "model_on_cases_bias": float(off_cases.mean())}
 
 
 def run(s: Settings) -> dict:
@@ -369,6 +389,7 @@ def run(s: Settings) -> dict:
     wi = whatif(s, test, preds)
     if len(wi):
         wi.to_parquet(s.mart / "ml_whatif.parquet", index=False)
+        results["whatif_check"] = whatif_check(wi)
     results["whatif_rows"] = int(len(wi))
 
     # Dashboard tables: small aggregates only.
@@ -404,10 +425,13 @@ def run(s: Settings) -> dict:
     final = final[(final["session"] == final.loc[final["model"] == "M2 LightGBM", "session"].iloc[-1]) & (final["stage"] == "final")]
     summary = {
         "evaluation_run_id": row["run_id"], "m2_run_id": final.loc[final["model"] == "M2 LightGBM", "run_id"].iloc[-1],
+        "git_commit": row["git_commit"],
         "sample": json.loads((s.reports / "sample_summary.json").read_text()),
         "rows": train["rows"], "gaps": results["gaps"], "threshold": results["threshold"],
         "court_only_auc": train["experiments"]["court_only"]["test_auc"], "case_only_auc": train["experiments"]["case_only"]["test_auc"],
         "test_year": int(s.cfg["split"]["test_year"]), "horizon_days": int(s.cfg["label"]["horizon_days"]),
+        "whatif": {"cases": int(s.cfg["whatif"]["cases"]), "observed_min_cases": int(s.cfg["whatif"]["observed_min_cases"]),
+                   "train_years": s.cfg["split"]["train_years"], "check": results.get("whatif_check")},
     }
     (s.mart / "ml_summary.json").write_text(json.dumps(py(summary), indent=1))
     print(seen[["model", "roc_auc", "pr_auc", "brier", "log_loss", "ece"]].round(4).to_string(index=False), flush=True)

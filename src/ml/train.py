@@ -35,7 +35,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-from .features import CATEGORICAL, FEATURES, LEAK_CATEGORICAL, NUMERIC, feature_version
+from .features import CATEGORICAL, FEATURES, LEAK_CATEGORICAL, NUMERIC, feature_version, whatif_profiles_path
 from .metrics import binary_metrics, slice_auc
 from .settings import Settings, load
 from .split import split_version
@@ -52,6 +52,9 @@ CASE = ["case_type", "case_type_label", "act", "act_section", "ddl_criminal_flag
         "petitioner_advocate"]
 COURT_X_CASE = ["court_type_disp_rate_py", "court_type_share_py"]
 assert set(TIMING + COURT + CASE + COURT_X_CASE) == set(FEATURES), "the ablation groups must cover every feature once"
+# What describes a case beyond its type: the what-if's case mix varies these.
+CASE_DETAIL = [c for c in CASE if c != "case_type"]
+NATIONAL = "*"  # the state value of a what-if mix drawn from every state
 
 
 def read_frame(s: Settings) -> pd.DataFrame:
@@ -188,6 +191,32 @@ def metric_row(data: Data, scores: dict[str, np.ndarray], probs: dict[str, np.nd
     return row
 
 
+def whatif_profiles(train: pd.DataFrame, s: Settings) -> pd.DataFrame:
+    """The case mix the dashboard's what-if scores each court on, as weighted case-detail profiles.
+
+    For each state and case type: a seeded sample of that state's training cases of the type, reduced to the details
+    that describe a case (case-type label, act, section, parties), with repeated profiles merged into a weight. A state
+    with too few cases of a type has no mix of its own; its courts use the national sample (state NATIONAL). Averaging
+    over real cases keeps the score near what a court's own cases do; taking the most common value of each field
+    separately gives a case that few courts see.
+    """
+    cfg = s.cfg["whatif"]
+    n, floor = int(cfg["cases"]), int(cfg["min_state_cases"])
+    frame = train[["state", "case_type"] + CASE_DETAIL]
+    parts = []
+
+    def draw(g: pd.DataFrame, state: str, case_type: str) -> None:
+        pick = g.sample(n=min(n, len(g)), random_state=s.seed)[CASE_DETAIL].astype(str)
+        parts.append(pick.groupby(CASE_DETAIL).size().rename("weight").reset_index().assign(state=state, case_type=case_type))
+
+    for case_type, g in frame.groupby("case_type", observed=True):
+        draw(g, NATIONAL, str(case_type))
+    for (state, case_type), g in frame.groupby(["state", "case_type"], observed=True):
+        if len(g) >= floor:
+            draw(g, str(state), str(case_type))
+    return pd.concat(parts, ignore_index=True)[["state", "case_type"] + CASE_DETAIL + ["weight"]]
+
+
 def save_predictions(s: Settings, data: Data, key: str, scores: dict, probs: dict | None = None) -> None:
     probs = probs or scores
     frames = []
@@ -322,12 +351,12 @@ def run(s: Settings) -> dict:
                                       "Shorter window: early filings over-represent long cases", train_idx=recent)
     summary["experiments"] = exp
 
-    # Typical case-level values per case type, for the dashboard's what-if (most common value in training).
-    train = data.df.loc[data.parts["train"]]
-    typical = {}
-    for ctype, g in train.groupby("case_type", observed=True):
-        typical[str(ctype)] = {c: str(g[c].astype(str).mode().iloc[0]) for c in CASE if c != "case_type"}
-    (s.models_dir / "typical_case.json").write_text(json.dumps(typical, indent=1))
+    # The case mix for the dashboard's what-if, per state and case type, from the training years only.
+    profiles = whatif_profiles(data.df.loc[data.parts["train"]], s)
+    profiles.to_parquet(whatif_profiles_path(s), index=False)
+    summary["whatif_profiles"] = {"groups": int(profiles.groupby(["state", "case_type"]).ngroups),
+                                  "state_groups": int(profiles.loc[profiles["state"] != NATIONAL, ["state", "case_type"]].drop_duplicates().shape[0]),
+                                  "profiles": int(len(profiles))}
     (s.reports / "train_summary.json").write_text(json.dumps(summary, indent=1, default=str))
     print(json.dumps(summary, indent=1, default=str), flush=True)
     return summary

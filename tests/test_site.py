@@ -56,9 +56,11 @@ def test_state_pages_cover_every_state(site):
 
 
 @pytest.mark.skipif(not (MART / "ml_summary.json").exists(), reason="model tables not built")
-def test_what_if_tree_holds_four_scores_and_a_count(site):
+def test_what_if_tree_holds_scores_the_observed_outcome_and_the_mix(site):
     tree = json.loads((site / "data" / "whatif.json").read_text(encoding="utf8"))
-    state = next(iter(tree.values()))
-    court = next(iter(next(iter(state.values())).values()))
-    scores = next(iter(court["types"].values()))
-    assert len(scores) == 5 and 0 <= scores[0] <= 1 and isinstance(scores[4], int)
+    rows = [v for state in tree.values() for district in state.values() for court in district.values() for v in court["types"].values()]
+    for model, b1, b2, observed, cases, average, own_mix in rows:
+        assert 0 <= model <= 1 and 0 <= b1 <= 1 and 0 <= b2 <= 1
+        assert isinstance(cases, int) and own_mix in (0, 1)
+        assert (observed is None) == (average is None), "the observed share and the model's average are published together"
+    assert any(r[3] is not None for r in rows), "some courts have enough cases to compare"

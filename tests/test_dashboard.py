@@ -1,4 +1,5 @@
 """Drives the real Streamlit app through every page, view and control, and fails on any exception."""
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -166,6 +167,11 @@ def test_delay_risk_page_and_its_what_if():
     at = at.run()
     assert not at.exception, at.exception
     assert metric(at, "Chance of a decision within 24 months").value == f"{row['p_model']:.0%}"
+    # The busiest group has enough cases, so the page sets what really happened beside the score.
+    assert pd.notna(row["observed_rate"])
+    year = json.loads((MART / "ml_summary.json").read_text())["test_year"]
+    line = f"This court's {year} cases of this type: {row['test_cases']:,} cases, {row['observed_rate']:.0%} decided within 24 months"
+    assert any(c.value.startswith(line) for c in at.caption), [c.value for c in at.caption]
     for view in ["Case type", "Court level", "State"]:
         at.segmented_control(key="slice_dim").set_value(view)
         at = at.run()

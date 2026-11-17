@@ -302,15 +302,20 @@ def model_page() -> None:
         "headline": {k: records(metrics[metrics["key"] == k])[0] for k in ("m2", "b1", "m2_cal")},
         "slices": records(table("ml_slices").query("rankable"), ["dimension", "slice", "n", "positive_rate", "auc_m2", "auc_b1", "auc_gap"]),
     })
-    # The what-if, nested state > district > court > case type, with short keys to keep the file small.
+    # The what-if, nested state > district > court > case type, with short keys to keep the file small. Each case type
+    # holds [model, B1, B2, observed share, test cases, model average on those cases, 1 if scored on the state's own mix].
     w = table("ml_whatif")
     tree: dict = {}
+
+    def share(v) -> float | None:
+        return None if pd.isna(v) else round(float(v), 4)
+
     for r in w.itertuples():
         court = tree.setdefault(r.state_name, {}).setdefault(r.district_name, {}).setdefault(r.court, {
             "name": re.sub(r"\s+", " ", re.sub(r"^[\d\W_]+", "", str(r.court_name or ""))).strip() or "Court",
             "level": r.court_level, "types": {}})
-        court["types"][r.case_type] = [round(float(r.p_model), 4), round(float(r.p_b1), 4), round(float(r.p_b2), 4),
-                                       None if pd.isna(r.observed_rate) else round(float(r.observed_rate), 4), int(r.test_cases)]
+        court["types"][r.case_type] = [share(r.p_model), share(r.p_b1), share(r.p_b2), share(r.observed_rate), int(r.test_cases),
+                                       share(r.mean_p_actual_cases), int(r.case_mix == "state")]
     write(SITE / "data" / "whatif.json", tree)
 
 

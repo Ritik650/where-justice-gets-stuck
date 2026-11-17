@@ -46,6 +46,11 @@ def whatif_path(s: Settings) -> Path:
     return s.work / "whatif_base.parquet"
 
 
+def whatif_profiles_path(s: Settings) -> Path:
+    """The case mix each court is scored on in the what-if, written by train.py: case details and weights, no case IDs."""
+    return s.models_dir / "whatif_profiles.parquet"
+
+
 def feature_version(s: Settings) -> str:
     """Config version plus a hash of the SQL and the feature list: any change to either gives a new version."""
     text = (SQL_DIR / "features.sql").read_text(encoding="utf8") + json.dumps(FEATURES) + json.dumps(s.cfg["features"], sort_keys=True)

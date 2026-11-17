@@ -419,7 +419,7 @@ async function renderModel(page) {
     return;
   }
   const S = await getJSON("data/summary.json");
-  const s = M.summary, gap = s.gaps.m2_vs_b1_court, h = M.headline, year = s.test_year;
+  const s = M.summary, gap = s.gaps.m2_vs_b1_court, h = M.headline, year = s.test_year, mix = s.whatif;
   page.innerHTML = `<h1 class="text-headline-lg">Delay risk model</h1>
     <p class="text-[16px] leading-[26px] text-body mt-2 max-w-3xl">Predicts, on the day a case is filed, whether it will be decided within 24 months, and measures how much that adds over each court's own history.</p>
     <div class="bg-panel border border-hairline border-l-2 border-l-accent p-4 my-5 text-[13px]"><strong>Research only.</strong> A proof of concept on ${Math.round(s.sample.sampled / 1e5)} lakh cases filed 2010-${year}.
@@ -437,12 +437,12 @@ async function renderModel(page) {
         <p class="text-caption text-muted mt-2">Court features alone reach ${fmt.num3(s.court_only_auc)}; case features alone ${fmt.num3(s.case_only_auc)}.
         ${s.case_only_auc >= s.court_only_auc ? "More of what predicts delay is what a case is than where it is filed." : "More of what predicts delay is where a case is filed than what it is."}</p></div>
       <div class="lg:col-span-2"><h2 class="text-headline-sm mb-2">Calibration</h2>${chartBox("m-cal", `Ten groups of ${year} test cases by predicted chance. Points on the grey diagonal are well calibrated.`)}</div></div>
-    <h2 class="text-headline-sm mt-10 mb-3">What-if: a typical case in one court</h2>
+    <h2 class="text-headline-sm mt-10 mb-3">What-if: a case filed in one court</h2>
     <div class="flex flex-wrap gap-4" id="wi-pick"></div>
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-4"><div id="wi-result"></div><div class="lg:col-span-2">${chartBox("wi-chart", "")}</div></div>
     <p class="text-caption text-muted mt-2" id="wi-note"></p>
     <h2 class="text-headline-sm mt-10 mb-3">Where the model is weakest</h2><div id="sl-dim"></div><div id="sl-table"></div>
-    <p class="text-caption text-muted mt-2">Slices with at least 1,000 test cases and 100 of each outcome, weakest first. Run <code>${esc(s.m2_run_id)}</code>, evaluation <code>${esc(s.evaluation_run_id)}</code> in reports/experiments.csv.</p>`;
+    <p class="text-caption text-muted mt-2">Slices with at least 1,000 test cases and 100 of each outcome, weakest first. Run <code>${esc(s.m2_run_id)}</code>, evaluation <code>${esc(s.evaluation_run_id)}</code> in reports/experiments.csv, from commit <code>${esc(s.git_commit)}</code>.</p>`;
   chart($("#m-cal", page), "specs/model_calibration.json");
   segmented($("#sl-dim", page), ["State", "Case type", "Court level"], "State", (d) => {
     const rows = M.slices.filter((r) => r.dimension === d).sort((a, b) => a.auc_m2 - b.auc_m2);
@@ -474,8 +474,14 @@ async function renderModel(page) {
     on("wi-court", (v) => { Object.assign(sel, { court: v, type: null }); });
     on("wi-type", (v) => { sel.type = v; });
     const ty = sel.type;
-    const [pm, pb1, pb2, obs, n] = courtMap[sel.court].types[ty];
-    $("#wi-result", page).innerHTML = kpi("Chance of a decision within 24 months", chance(pm), `Model (M2), filed July ${year}`);
+    const [pm, pb1, pb2, obs, n, avg, ownMix] = courtMap[sel.court].types[ty];
+    // What this court's real cases of the type did, published only when there are enough of them to compare.
+    const actual = obs !== null
+      ? `This court's ${year} cases of this type: ${fmt.int(n)} cases, ${fmt.pct(obs)} decided within 24 months, model average ${fmt.pct(avg)}.`
+      : n ? `This court's ${year} cases of this type: ${fmt.int(n)}, too few to compare (at least ${mix.observed_min_cases} are needed).`
+      : `This court has no ${year} cases of this type in the sample to compare with.`;
+    $("#wi-result", page).innerHTML = kpi("Chance of a decision within 24 months", chance(pm), `Model (M2), filed July ${year}`)
+      + `<p class="text-caption text-muted mt-2">${esc(actual)}</p>`;
     const values = [{ what: "Model (M2)", value: pm, focus: "model" }, { what: "Court's history (B1)", value: pb1, focus: "context" },
       { what: "Court's history for this case type (B2)", value: pb2, focus: "context" }];
     if (obs !== null) values.push({ what: `Observed in the ${year} sample (${fmt.int(n)} cases)`, value: obs, focus: "context" });
@@ -483,7 +489,10 @@ async function renderModel(page) {
     spec.datasets[Object.keys(spec.datasets)[0]] = values;
     spec.height = 34 * values.length + 30;
     chart($("#wi-chart", page), spec);
-    $("#wi-note", page).textContent = `A typical ${ty.toLowerCase()} case: the most common act, section and parties for this type in training, filed in July ${year} with the court's history as of the end of ${year - 1}. B1 and B2 are disposal rates mapped onto the same chance with 2015 data.`;
+    const [first, last] = mix.train_years;
+    const source = ownMix ? `${mix.cases} ${sel.state} cases of this type filed ${first}-${last}`
+      : `${mix.cases} cases of this type filed ${first}-${last} across India (${sel.state} has too few of its own)`;
+    $("#wi-note", page).textContent = `Model: the average chance over ${source}, each with its own act, section and parties, as if filed in this court in July ${year} with the court's history as of the end of ${year - 1}. B1 and B2 are disposal rates mapped onto the same chance with 2015 data.`;
   };
   draw();
 }
