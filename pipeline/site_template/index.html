@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Where Justice Gets Stuck</title>
+<meta name="description" content="Where and why Indian lower courts are delayed, from 80.9 million cases filed 2010-2018: findings, state profiles, data quality and a delay-risk model.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Layout and components from the project's Stitch designs ("Informed Ledger"): docs/design/stitch_design_tokens.md -->
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          canvas: "#F9F8F6", panel: "#FFFFFF", subdued: "#F4F2EE", hairline: "#E5E3DF", rowline: "#ECEAE6",
+          ink: "#18181B", body: "#27272A", muted: "#71717A", accent: "#1E40AF", interactive: "#2563EB", tone: "#DBEAFE",
+        },
+        fontFamily: { sans: ["Inter", "Segoe UI", "Arial", "sans-serif"] },
+        borderRadius: { DEFAULT: "0rem", lg: "0rem", xl: "0rem", full: "9999px" },
+        fontSize: {
+          "kpi-metric": ["28px", { lineHeight: "34px", letterSpacing: "-0.03em", fontWeight: "500" }],
+          "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "600" }],
+          "headline-sm": ["16px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "600" }],
+          "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "500" }],
+          caption: ["12px", { lineHeight: "17px", letterSpacing: "0.01em", fontWeight: "400" }],
+        },
+      },
+    },
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/vega@6.4.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@6.4.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@7.3.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<style>
+  body { font-feature-settings: "tnum" 1; }
+  .chart { width: 100%; min-height: 60px; }
+  .chart .vega-embed { width: 100%; }
+  .prose h1 { font-size: 28px; line-height: 36px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 16px; }
+  .prose h2 { font-size: 20px; line-height: 28px; font-weight: 600; margin: 32px 0 10px; }
+  .prose h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; }
+  .prose p, .prose li { font-size: 14px; line-height: 22px; color: #27272A; }
+  .prose p { margin: 0 0 12px; max-width: 75ch; }
+  .prose ul, .prose ol { margin: 0 0 12px 20px; list-style: disc; max-width: 75ch; }
+  .prose ol { list-style: decimal; }
+  .prose a { color: #1E40AF; text-decoration: underline; text-decoration-color: #E5E3DF; }
+  .prose code { font-size: 12px; background: #F4F2EE; padding: 1px 4px; }
+  .prose table { border-collapse: collapse; margin: 8px 0 16px; font-size: 13px; background: #fff; border: 1px solid #E5E3DF; }
+  .prose th { background: #F4F2EE; color: #71717A; font-weight: 500; text-align: left; padding: 8px 10px; border-bottom: 1px solid #E5E3DF; }
+  .prose td { padding: 8px 10px; border-bottom: 1px solid #ECEAE6; vertical-align: top; }
+  .seg button[aria-pressed="true"] { color: #18181B; border-bottom-color: #18181B; font-weight: 600; }
+  .pill[aria-pressed="true"] { background: #18181B; color: #fff; border-color: #18181B; }
+  select, input[type="search"] { border-radius: 0; }
+  input[type="range"] { accent-color: #18181B; }
+  details > summary { cursor: pointer; }
+</style>
+</head>
+<body class="bg-canvas text-ink font-sans min-h-screen flex flex-col antialiased">
+<header class="bg-panel border-b border-hairline sticky top-0 z-50">
+  <div class="flex flex-wrap justify-between items-center gap-3 w-full px-4 md:px-6 py-3 max-w-7xl mx-auto">
+    <div class="flex flex-wrap items-center gap-x-8 gap-y-2">
+      <a class="text-[20px] font-semibold tracking-tight" href="#/findings">Where Justice Gets Stuck</a>
+      <nav class="flex flex-wrap items-center gap-x-5 gap-y-1 text-[14px]" id="nav" aria-label="Pages">
+        <a href="#/findings" data-nav="findings" class="py-1 border-b-2 border-transparent text-muted hover:text-ink">Findings</a>
+        <a href="#/state" data-nav="state" class="py-1 border-b-2 border-transparent text-muted hover:text-ink">State profile</a>
+        <a href="#/quality" data-nav="quality" class="py-1 border-b-2 border-transparent text-muted hover:text-ink">Data quality</a>
+        <a href="#/model" data-nav="model" class="py-1 border-b-2 border-transparent text-muted hover:text-ink">Delay risk model</a>
+        <a href="#/methods" data-nav="methods" class="py-1 border-b-2 border-transparent text-muted hover:text-ink">Methods</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-2 text-[11px] font-medium">
+      <a id="live-link" class="bg-panel text-ink border border-hairline px-3 py-1.5 hover:bg-subdued hover:border-muted" href="#">Interactive version</a>
+      <a id="code-link" class="bg-ink text-white border border-ink px-3 py-1.5 hover:bg-body" href="#">Code</a>
+    </div>
+  </div>
+</header>
+<div class="border-b border-hairline bg-subdued">
+  <p class="max-w-7xl mx-auto px-4 md:px-6 py-2 text-caption text-muted">
+    The always-on copy of the dashboard, built from the same tables and chart definitions as the interactive app. The interactive
+    version sleeps when idle and adds a few controls; every figure here is the same.
+  </p>
+</div>
+<main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-6 py-8">
+  <section data-page="findings" hidden></section>
+  <section data-page="state" hidden></section>
+  <section data-page="quality" hidden></section>
+  <section data-page="model" hidden></section>
+  <section data-page="methods" hidden></section>
+  <noscript><p>This page needs JavaScript to draw its charts and tables. The full report is on GitHub.</p></noscript>
+</main>
+<footer class="bg-subdued border-t border-hairline mt-16">
+  <div class="w-full px-4 md:px-6 py-8 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-6">
+    <div class="flex flex-col gap-2 max-w-2xl">
+      <span class="text-[14px] font-semibold">Where Justice Gets Stuck</span>
+      <p class="text-caption text-muted" id="sources"></p>
+      <p class="text-caption text-muted">Code under the MIT licence; data and derived tables under CC BY-NC-SA 4.0, for non-commercial use only.
+        District boundaries are for display only and are not an official map of India.</p>
+    </div>
+    <div class="flex flex-wrap gap-x-6 gap-y-2 text-[13px]" id="footer-links"></div>
+  </div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

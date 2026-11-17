@@ -2,7 +2,7 @@
 
 Where and why Indian lower courts are delayed, from **80,935,944 cases** filed 2010-2018, with 2026 pendency for context.
 
-**[Open the live dashboard](https://where-justice-gets-stuck.streamlit.app/)** | [Read the two-page brief](outputs/where_justice_gets_stuck_brief.pdf)
+**[Open the live dashboard](https://where-justice-gets-stuck.streamlit.app/)** | [Always-on copy](https://ritik650.github.io/where-justice-gets-stuck/) | [Read the two-page brief](outputs/where_justice_gets_stuck_brief.pdf)
 
 Indian district and subordinate courts held 4.99 crore pending cases in July 2026. This project finds where those cases stall, using case-level records and a data-quality layer that documents every problem found along the way.
 
@@ -88,7 +88,8 @@ Train / valid / test: 1,554,034 / 506,111 / 548,258 cases, plus 80,357 from 636 
 |---|---|
 | DuckDB + Parquet pipeline: loaders, SQL rules, act-name mapping | [pipeline/](pipeline/), [sql/dq_rules.sql](sql/dq_rules.sql) |
 | Excel data-quality scorecard, with live formulas | [outputs/data_quality_scorecard.xlsx](outputs/data_quality_scorecard.xlsx) |
-| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, what-if calculator | [Live](https://where-justice-gets-stuck.streamlit.app/), [dashboard/](dashboard/) |
+| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, delay-risk model, what-if calculators | [Live](https://where-justice-gets-stuck.streamlit.app/), [dashboard/](dashboard/) |
+| Always-on static copy of the dashboard on GitHub Pages | [Open](https://ritik650.github.io/where-justice-gets-stuck/), [pipeline/build_site.py](pipeline/build_site.py) |
 | Two-page brief with the top findings | [outputs/where_justice_gets_stuck_brief.pdf](outputs/where_justice_gets_stuck_brief.pdf) |
 | Delay-risk model: labels, point-in-time features, baselines, LightGBM, evaluation, model card | [reports/ml_poc_report.md](reports/ml_poc_report.md), [src/ml/](src/ml/), [docs/model_card.md](docs/model_card.md) |
 
@@ -136,6 +137,13 @@ Tests: `pytest tests`. They cover the survival estimator against `lifelines`, th
 ### Host the dashboard
 
 The [live copy](https://where-justice-gets-stuck.streamlit.app/) runs on [Streamlit Community Cloud](https://streamlit.io/cloud) and updates when `main` changes. To host your own, point a new app at this repository with `dashboard/app.py` as the main file. It installs the short [dashboard/requirements.txt](dashboard/requirements.txt), and no secrets or row-level data are needed. The case data licence is non-commercial, so keep any hosted copy non-commercial too.
+
+Community Cloud puts an app to sleep when nobody has opened it for a while, so an [always-on copy](https://ritik650.github.io/where-justice-gets-stuck/) is also published with GitHub Pages. It is plain files built from the same tables and the same chart definitions, so its figures always match the app. To rebuild and publish it:
+
+```
+python -I pipeline/build_site.py           # writes site/
+python -I pipeline/publish_site.py --push   # commits site/ to the gh-pages branch and pushes it
+```
 
 ## How it is built
 

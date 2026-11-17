@@ -20,3 +20,5 @@ data/ml/
 data/fixture/
 mlruns/
 mlflow.db
+# The static copy of the dashboard, built by pipeline/build_site.py and published to the gh-pages branch.
+site/

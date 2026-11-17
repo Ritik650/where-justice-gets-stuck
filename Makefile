@@ -12,7 +12,7 @@ export ML_PROFILE := $(PROFILE)
 export MLFLOW_DISABLE_AGENT_HINT := 1
 ML := $(PYTHON) -X utf8 -m src.ml
 
-.PHONY: all data dq features train evaluate report test lint mlflow manifest pipeline clean-ml
+.PHONY: all data dq features train evaluate report test lint mlflow manifest site pipeline clean-ml
 
 all: data dq features train evaluate report
 
@@ -55,6 +55,10 @@ mlflow:
 ## manifest: refresh data/MANIFEST.md from the raw files on disk
 manifest:
 	$(ML).manifest
+
+## site: the always-on static copy of the dashboard in site/ (publish with pipeline/publish_site.py --push)
+site:
+	$(PYTHON) -I -X utf8 pipeline/build_site.py
 
 ## pipeline: the descriptive project (marts, dashboard tables, brief, scorecard) from pipeline/run_all.py
 pipeline:

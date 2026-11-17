@@ -22,6 +22,8 @@ CHARTS = OUTPUTS / "charts"
 YEARS = range(2010, 2019)
 
 LIVE_DASHBOARD = "https://where-justice-gets-stuck.streamlit.app/"
+# The always-on static copy (pipeline/build_site.py), served by GitHub Pages from the gh-pages branch.
+STATIC_SITE = "https://ritik650.github.io/where-justice-gets-stuck/"
 REPOSITORY = "https://github.com/Ritik650/where-justice-gets-stuck"
 
 

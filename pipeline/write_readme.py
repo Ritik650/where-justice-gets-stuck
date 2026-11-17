@@ -12,7 +12,7 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import LIVE_DASHBOARD, MART, OUTPUTS, REPOSITORY, ROOT, SCOPE  # noqa: E402
+from common import LIVE_DASHBOARD, MART, OUTPUTS, REPOSITORY, ROOT, SCOPE, STATIC_SITE  # noqa: E402
 
 PRIVATE = ROOT / "private"  # kept out of git: prep material for the author, not part of the published project
 REPORTS = ROOT / "reports"
@@ -138,7 +138,7 @@ def readme(f: dict, t: dict, m: dict | None = None) -> str:
 
 Where and why Indian lower courts are delayed, from **{f['total_rows']:,} cases** filed 2010-2018, with 2026 pendency for context.
 
-**[Open the live dashboard]({LIVE_DASHBOARD})** | [Read the two-page brief](outputs/where_justice_gets_stuck_brief.pdf)
+**[Open the live dashboard]({LIVE_DASHBOARD})** | [Always-on copy]({STATIC_SITE}) | [Read the two-page brief](outputs/where_justice_gets_stuck_brief.pdf)
 
 Indian district and subordinate courts held {f['njdg_total'] / 1e7:.2f} crore pending cases in July 2026. This project finds where those cases stall, using case-level records and a data-quality layer that documents every problem found along the way.
 
@@ -165,7 +165,8 @@ Every figure has its limits spelled out in [the brief](outputs/where_justice_get
 |---|---|
 | DuckDB + Parquet pipeline: loaders, SQL rules, act-name mapping | [pipeline/](pipeline/), [sql/dq_rules.sql](sql/dq_rules.sql) |
 | Excel data-quality scorecard, with live formulas | [outputs/data_quality_scorecard.xlsx](outputs/data_quality_scorecard.xlsx) |
-| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, what-if calculator | [Live]({LIVE_DASHBOARD}), [dashboard/](dashboard/) |
+| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, delay-risk model, what-if calculators | [Live]({LIVE_DASHBOARD}), [dashboard/](dashboard/) |
+| Always-on static copy of the dashboard on GitHub Pages | [Open]({STATIC_SITE}), [pipeline/build_site.py](pipeline/build_site.py) |
 | Two-page brief with the top findings | [outputs/where_justice_gets_stuck_brief.pdf](outputs/where_justice_gets_stuck_brief.pdf) |
 {ml_row}
 ### Data-management work
@@ -212,6 +213,13 @@ Tests: `pytest tests`. They cover the survival estimator against `lifelines`, th
 ### Host the dashboard
 
 The [live copy]({LIVE_DASHBOARD}) runs on [Streamlit Community Cloud](https://streamlit.io/cloud) and updates when `main` changes. To host your own, point a new app at this repository with `dashboard/app.py` as the main file. It installs the short [dashboard/requirements.txt](dashboard/requirements.txt), and no secrets or row-level data are needed. The case data licence is non-commercial, so keep any hosted copy non-commercial too.
+
+Community Cloud puts an app to sleep when nobody has opened it for a while, so an [always-on copy]({STATIC_SITE}) is also published with GitHub Pages. It is plain files built from the same tables and the same chart definitions, so its figures always match the app. To rebuild and publish it:
+
+```
+python -I pipeline/build_site.py           # writes site/
+python -I pipeline/publish_site.py --push   # commits site/ to the gh-pages branch and pushes it
+```
 
 ## How it is built
 
