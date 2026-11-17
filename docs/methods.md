@@ -94,6 +94,24 @@ Worth knowing about, because each one passed some earlier check:
 | The map polygons had reversed rings, which filled the whole globe with colour | Looking at the rendered map, after all tests had passed |
 | Districts with no data first rendered white, then in the scale's palest blue, so they read as fast | Looking at the rendered map again, and then drawing them as a separate grey layer |
 | State conviction rates looked dramatic (0% in Goa, 6% in Bihar) but were an artefact of labelling | Checking how many closures recorded a verdict at all |
+| The delay-risk model's court history first counted only "usable" cases, and whether a case is usable depends on its later decision date, so history for a 2015 filing quietly used information from 2031 | A test that rebuilds the features with every later event deleted and requires nothing to change (`tests/test_ml_features.py`) |
+| A tie at twelfth place let `state_acts` pick a different act on each run | Re-running the whole pipeline from raw data and comparing every table ([rebuild_log.md](https://github.com/Ritik650/where-justice-gets-stuck/blob/main/docs/rebuild_log.md)) |
+
+## The delay-risk model
+
+A proof of concept asks the predictive version of this project's question: on the day a case is filed, can we tell
+whether it will be decided within 24 months, and how much does a model add over the court's own history? It reuses the
+same cut-off date and data-quality rules, and adds four safeguards, each with its own document:
+
+- **Censoring.** A label is defined only when its whole 730-day window is observed, so only filings up to 2016 are
+  labelled ([label_definition.md](https://github.com/Ritik650/where-justice-gets-stuck/blob/main/docs/label_definition.md)).
+- **No look-ahead.** Every feature is known on the day of filing; court history uses only earlier events, and two tests
+  delete every later event to prove it ([features.md](https://github.com/Ritik650/where-justice-gets-stuck/blob/main/docs/features.md), [feature_audit.md](https://github.com/Ritik650/where-justice-gets-stuck/blob/main/docs/feature_audit.md)).
+- **Honest comparison.** The model is judged against each court's prior-year disposal rate, on later filings (a
+  temporal split) and on courts it never saw, with intervals that resample whole courts.
+- **Stated limits.** The [model card](https://github.com/Ritik650/where-justice-gets-stuck/blob/main/docs/model_card.md) says what it is for and never for.
+
+Results are in [reports/ml_poc_report.md](https://github.com/Ritik650/where-justice-gets-stuck/blob/main/reports/ml_poc_report.md).
 
 ## Checks against outside data
 

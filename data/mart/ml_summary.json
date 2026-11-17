@@ -1,0 +1,90 @@
+{
+ "evaluation_run_id": "67d928e3ec",
+ "m2_run_id": "765fb934f7",
+ "sample": {
+  "population": 53660034,
+  "sampled": 2999990,
+  "fraction": 0.055907530733208255,
+  "seed": 20261117,
+  "strata": 223,
+  "id_hash": "02829b71591b28cd",
+  "seconds": 73.8
+ },
+ "rows": {
+  "train": 1554034,
+  "valid": 506111,
+  "test": 548258,
+  "test_unseen": 80357
+ },
+ "gaps": {
+  "m2_vs_b1_case": {
+   "auc_a": 0.7926269814767699,
+   "auc_b": 0.6789994310181802,
+   "gap": 0.11362755045858974,
+   "ci_low": 0.11243434296731757,
+   "ci_high": 0.11495322849811541,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  },
+  "m2_vs_b1_court": {
+   "auc_a": 0.7926269814767699,
+   "auc_b": 0.6789994310181802,
+   "gap": 0.11362755045858974,
+   "ci_low": 0.10545117249316512,
+   "ci_high": 0.12196741414638139,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  },
+  "m2_vs_b2_case": {
+   "auc_a": 0.7926269814767699,
+   "auc_b": 0.7463154455815663,
+   "gap": 0.04631153589520365,
+   "ci_low": 0.04550242615834032,
+   "ci_high": 0.04728158749920874,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  },
+  "b2_vs_b1_case": {
+   "auc_a": 0.7463154455815663,
+   "auc_b": 0.6789994310181802,
+   "gap": 0.0673160145633861,
+   "ci_low": 0.06634559911977368,
+   "ci_high": 0.0682430465775765,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  },
+  "unseen_m2_vs_b1_court": {
+   "auc_a": 0.7893379788453637,
+   "auc_b": 0.6789388538260479,
+   "gap": 0.11039912501931581,
+   "ci_low": 0.08956012196359603,
+   "ci_high": 0.13529225800745007,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  }
+ },
+ "threshold": {
+  "rule": "flag when calibrated P(decided within 24 months) < 0.5",
+  "value": 0.5,
+  "valid": {
+   "threshold": 0.5,
+   "flagged_share": 0.33981478371345414,
+   "precision_delay": 0.671265931714578,
+   "recall_delay": 0.6146093974595129,
+   "flagged": 171984,
+   "true_positives": 115447
+  },
+  "test": {
+   "threshold": 0.5,
+   "flagged_share": 0.33867084474827547,
+   "precision_delay": 0.6153361446367117,
+   "recall_delay": 0.5861996429084491,
+   "flagged": 185679,
+   "true_positives": 114255
+  }
+ },
+ "court_only_auc": 0.679282,
+ "case_only_auc": 0.769639,
+ "test_year": 2016,
+ "horizon_days": 730
+}

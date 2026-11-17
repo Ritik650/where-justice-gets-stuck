@@ -1,0 +1,13 @@
+id,status,title,treatment,failures,checked,rate
+LB01,Invariant,Label window ends after the observation end,Impossible by construction. A failure would mean some labels are not fully observed.,0,53660034,0.0
+LB02,Invariant,Positive label with no decision date,Impossible by construction.,0,53660034,0.0
+LB03,Invariant,"Positive label, decided after the window",Impossible by construction.,0,53660034,0.0
+LB04,Invariant,"Negative label, decided within the window",Impossible by construction.,0,53660034,0.0
+LB05,Invariant,Decided within 12 months but not within 24,Impossible: the 12-month label must imply the 24-month one.,0,53660034,0.0
+LB06,Invariant,Negative duration for the Cox model,Impossible once V01 is excluded.,0,53660034,0.0
+LB07,Accepted,"Undecided, but an outcome is recorded (rule X04)","Labelled pending (0), as the main analysis counts them open. Could be a missing decision date.",18763,53660034,0.0003496643330490622
+LB08,Accepted,Decided within the window by transfer or committal (rule X09),"Labelled decided (1), matching official disposal counts. A transfer closes the file, not the dispute.",2093787,53660034,0.03901948701709731
+LB09,Info,"Decided, but after the window","Labelled 0. These cases took longer than the window, which is what the label measures.",12930857,53660034,0.2409774283780737
+LB10,Info,Decided on the day of filing,Labelled 1. Mostly bail and petty matters.,3682471,53660034,0.06862595353554939
+LB11,Info,Decided on the last day of the window,Labelled 1: the window includes its last day.,19604,53660034,0.0003653370774979382
+LB12,Info,Never decided at all,Labelled 0. The case was still open when its court's records were collected.,10255165,53660034,0.19111365080387388
