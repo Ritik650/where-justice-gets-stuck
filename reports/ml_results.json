@@ -667,7 +667,17 @@
    "cases": 4
   }
  ],
+ "whatif_check": {
+  "groups": 4110,
+  "state_mix_share": 0.9747470115258797,
+  "whatif_mae": 0.12764406620294186,
+  "model_on_cases_mae": 0.1153314288961161,
+  "whatif_share_off_20": 0.22579075425790754,
+  "model_on_cases_share_off_20": 0.18564476885644768,
+  "whatif_bias": 0.01128324552074315,
+  "model_on_cases_bias": -0.012762143011787241
+ },
  "whatif_rows": 32709,
- "evaluation_run_id": "67d928e3ec",
- "seconds": 738.9
+ "evaluation_run_id": "c7d5b105ba",
+ "seconds": 646.6
 }

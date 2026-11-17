@@ -25,43 +25,48 @@
    "valid_auc": 0.999325,
    "test_auc": 0.996709,
    "test_unseen_auc": 0.995296,
-   "run_id": "ecf789913e"
+   "run_id": "e602704dac"
   },
   "leak_defendant_advocate": {
    "valid_auc": 0.825967,
    "test_auc": 0.795974,
    "test_unseen_auc": 0.790123,
-   "run_id": "f1de46cf60"
+   "run_id": "ac87b866d6"
   },
   "court_only": {
    "valid_auc": 0.710708,
    "test_auc": 0.679282,
    "test_unseen_auc": 0.67843,
-   "run_id": "6370b06b3b"
+   "run_id": "4bfba81659"
   },
   "case_only": {
    "valid_auc": 0.780474,
    "test_auc": 0.769639,
    "test_unseen_auc": 0.77839,
-   "run_id": "dae581640d"
+   "run_id": "26003db628"
   },
   "no_court_id": {
    "valid_auc": 0.817755,
    "test_auc": 0.803044,
    "test_unseen_auc": 0.797427,
-   "run_id": "e37e37744d"
+   "run_id": "ed51f4bc63"
   },
   "label_12m": {
    "valid_auc": 0.823375,
    "test_auc": 0.8061,
    "test_unseen_auc": 0.813278,
-   "run_id": "de21eb9582"
+   "run_id": "07a192c44b"
   },
   "recent_window": {
    "valid_auc": 0.821192,
    "test_auc": 0.791486,
    "test_unseen_auc": 0.790558,
-   "run_id": "d7acddc100"
+   "run_id": "9ee767d4b9"
   }
+ },
+ "whatif_profiles": {
+  "groups": 254,
+  "state_groups": 242,
+  "profiles": 19981
  }
 }

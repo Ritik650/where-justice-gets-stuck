@@ -55,7 +55,7 @@ cases, 1,000 resamples). On courts held out of training entirely it scores 0.789
 
 M2 is shown after isotonic recalibration on 2015. Flagging cases whose calibrated chance of a decision within 24 months
 is below 0.5 marks 34% of 2016 filings, with precision 62% and recall 59% for overruns.
-Every number above is from logged runs `765fb934f7` (M2) and `67d928e3ec` (evaluation); the full log is below.
+Every number above is from logged runs `2e6c4f052f` (M2) and `c7d5b105ba` (evaluation), run from commit [`0fcf707`](https://github.com/Ritik650/where-justice-gets-stuck/commit/0fcf707); the log is below.
 
 ```mermaid
 flowchart LR
@@ -198,36 +198,70 @@ The design decisions worth a look are in [docs/methods.md](docs/methods.md), inc
 
 ## Experiment log
 
-Every run of the delay-risk model, from [reports/experiments.csv](reports/experiments.csv), which also records each run's
-parameters, feature version, split version, row counts, config hash and git commit. Grid candidates carry no test
-metrics: the test set was scored only by the models chosen on validation. Stages: `final` models, `grid` candidates,
-`experiment` (leakage tests, ablations, the 12-month label), `evaluation` (bootstrap intervals and threshold).
+The runs every number in this README comes from: one training session and its evaluation, run from commit [`0fcf707`](https://github.com/Ritik650/where-justice-gets-stuck/commit/0fcf707).
+[reports/experiments.csv](reports/experiments.csv) keeps every run, with its parameters, feature version, split version,
+row counts, config hash and commit. Grid candidates carry no test metrics: the test set was scored only by the models
+chosen on validation. Stages: `final` models, `grid` candidates, `experiment` (leakage tests, ablations, the 12-month
+label), `evaluation` (bootstrap intervals and threshold).
 
-| Run | Stage | Model | Label | Valid AUC | Test AUC | Unseen-court AUC | Test Brier | Seconds |
-|---|---|---|---|---|---|---|---|---|
-| `b6bdc6564e` | final | B0 majority class | 24m | 0.500 | 0.500 | 0.500 | 0.247 | 0 |
-| `4eb252b4f9` | final | B1 court prior-year disposal rate | 24m | 0.687 | 0.679 | 0.679 | 0.209 | 0 |
-| `dee389ff94` | final | B2 court x case-type prior-year rate | 24m | 0.742 | 0.746 | 0.740 | 0.191 | 0 |
-| `4d273f4d51` | experiment | B1b court 24-month rate, cohort filed 3 years earlier | 24m | 0.636 | 0.640 | 0.630 | 0.217 | 0 |
-| `af5f8fec25` | final | M1 logistic regression | 24m | 0.784 | 0.764 | 0.741 | 0.191 | 120 |
-| `26ae3e3d82` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 241 |
-| `5e4356525e` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 172 |
-| `b467f3c442` | grid | M2 LightGBM candidate | 24m | 0.820 |  |  |  | 91 |
-| `4e568e01bf` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 136 |
-| `cad2c4ab99` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 139 |
-| `1155abb6a6` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 136 |
-| `e9bde2506e` | grid | M2 LightGBM candidate | 24m | 0.820 |  |  |  | 87 |
-| `966897ba3b` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 84 |
-| `765fb934f7` | final | M2 LightGBM | 24m | 0.821 | 0.793 | 0.789 | 0.187 | 201 |
-| `6fa473e88b` | final | M3 Cox proportional hazards | 24m | 0.757 | 0.759 | 0.752 | 0.191 | 45 |
-| `ecf789913e` | experiment | M2 + leak: days to last hearing | 24m | 0.999 | 0.997 | 0.995 | 0.017 | 52 |
-| `f1de46cf60` | experiment | M2 + leak: defendant's advocate named | 24m | 0.826 | 0.796 | 0.790 | 0.185 | 172 |
-| `6370b06b3b` | experiment | M2 court + timing features only | 24m | 0.711 | 0.679 | 0.678 | 0.213 | 42 |
-| `dae581640d` | experiment | M2 case + timing features only | 24m | 0.780 | 0.770 | 0.778 | 0.187 | 34 |
-| `e37e37744d` | experiment | M2 without court and district IDs | 24m | 0.818 | 0.803 | 0.797 | 0.175 | 115 |
-| `de21eb9582` | experiment | M2 12-month label | 12m | 0.823 | 0.806 | 0.813 | 0.184 | 108 |
-| `d7acddc100` | experiment | M2 trained on 2012-2014 only | 24m | 0.821 | 0.791 | 0.791 | 0.188 | 179 |
-| `67d928e3ec` | evaluation | M2 vs B1 on test (bootstrap, calibration, threshold) | 24m |  | 0.793 | 0.789 | 0.176 | 739 |
+| Run | Commit | Stage | Model | Label | Valid AUC | Test AUC | Unseen-court AUC | Test Brier | Seconds |
+|---|---|---|---|---|---|---|---|---|---|
+| `36c90eb4b1` | `0fcf707` | final | B0 majority class | 24m | 0.500 | 0.500 | 0.500 | 0.247 | 0 |
+| `ad1400f932` | `0fcf707` | final | B1 court prior-year disposal rate | 24m | 0.687 | 0.679 | 0.679 | 0.209 | 0 |
+| `a2dce0620d` | `0fcf707` | final | B2 court x case-type prior-year rate | 24m | 0.742 | 0.746 | 0.740 | 0.191 | 0 |
+| `f0a590ab88` | `0fcf707` | experiment | B1b court 24-month rate, cohort filed 3 years earlier | 24m | 0.636 | 0.640 | 0.630 | 0.217 | 0 |
+| `2a87396922` | `0fcf707` | final | M1 logistic regression | 24m | 0.784 | 0.764 | 0.741 | 0.191 | 120 |
+| `018f013093` | `0fcf707` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 217 |
+| `475174fea4` | `0fcf707` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 135 |
+| `648b1ead30` | `0fcf707` | grid | M2 LightGBM candidate | 24m | 0.820 |  |  |  | 86 |
+| `200b441ea0` | `0fcf707` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 109 |
+| `4dcdc58871` | `0fcf707` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 134 |
+| `be398bf530` | `0fcf707` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 120 |
+| `31e78b8245` | `0fcf707` | grid | M2 LightGBM candidate | 24m | 0.820 |  |  |  | 86 |
+| `55d9b13a8b` | `0fcf707` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 84 |
+| `2e6c4f052f` | `0fcf707` | final | M2 LightGBM | 24m | 0.821 | 0.793 | 0.789 | 0.187 | 194 |
+| `e1b2783e40` | `0fcf707` | final | M3 Cox proportional hazards | 24m | 0.757 | 0.759 | 0.752 | 0.191 | 42 |
+| `e602704dac` | `0fcf707` | experiment | M2 + leak: days to last hearing | 24m | 0.999 | 0.997 | 0.995 | 0.017 | 52 |
+| `ac87b866d6` | `0fcf707` | experiment | M2 + leak: defendant's advocate named | 24m | 0.826 | 0.796 | 0.790 | 0.185 | 147 |
+| `4bfba81659` | `0fcf707` | experiment | M2 court + timing features only | 24m | 0.711 | 0.679 | 0.678 | 0.213 | 50 |
+| `26003db628` | `0fcf707` | experiment | M2 case + timing features only | 24m | 0.780 | 0.770 | 0.778 | 0.187 | 54 |
+| `ed51f4bc63` | `0fcf707` | experiment | M2 without court and district IDs | 24m | 0.818 | 0.803 | 0.797 | 0.175 | 104 |
+| `07a192c44b` | `0fcf707` | experiment | M2 12-month label | 12m | 0.823 | 0.806 | 0.813 | 0.184 | 64 |
+| `9ee767d4b9` | `0fcf707` | experiment | M2 trained on 2012-2014 only | 24m | 0.821 | 0.791 | 0.791 | 0.188 | 96 |
+| `c7d5b105ba` | `0fcf707` | evaluation | M2 vs B1 on test (bootstrap, calibration, threshold) | 24m |  | 0.793 | 0.789 | 0.176 | 646 |
+
+<details>
+<summary>23 earlier runs, superseded by the ones above</summary>
+
+A commit ending in `-dirty` means the code, SQL or config differed from that commit when the run started.
+
+| Run | Commit | Stage | Model | Label | Valid AUC | Test AUC | Unseen-court AUC | Test Brier | Seconds |
+|---|---|---|---|---|---|---|---|---|---|
+| `b6bdc6564e` | `a4a143a-dirty` | final | B0 majority class | 24m | 0.500 | 0.500 | 0.500 | 0.247 | 0 |
+| `4eb252b4f9` | `a4a143a-dirty` | final | B1 court prior-year disposal rate | 24m | 0.687 | 0.679 | 0.679 | 0.209 | 0 |
+| `dee389ff94` | `a4a143a-dirty` | final | B2 court x case-type prior-year rate | 24m | 0.742 | 0.746 | 0.740 | 0.191 | 0 |
+| `4d273f4d51` | `a4a143a-dirty` | experiment | B1b court 24-month rate, cohort filed 3 years earlier | 24m | 0.636 | 0.640 | 0.630 | 0.217 | 0 |
+| `af5f8fec25` | `a4a143a-dirty` | final | M1 logistic regression | 24m | 0.784 | 0.764 | 0.741 | 0.191 | 120 |
+| `26ae3e3d82` | `a4a143a-dirty` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 241 |
+| `5e4356525e` | `a4a143a-dirty` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 172 |
+| `b467f3c442` | `a4a143a-dirty` | grid | M2 LightGBM candidate | 24m | 0.820 |  |  |  | 91 |
+| `4e568e01bf` | `a4a143a-dirty` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 136 |
+| `cad2c4ab99` | `a4a143a-dirty` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 139 |
+| `1155abb6a6` | `a4a143a-dirty` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 136 |
+| `e9bde2506e` | `a4a143a-dirty` | grid | M2 LightGBM candidate | 24m | 0.820 |  |  |  | 87 |
+| `966897ba3b` | `a4a143a-dirty` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 84 |
+| `765fb934f7` | `a4a143a-dirty` | final | M2 LightGBM | 24m | 0.821 | 0.793 | 0.789 | 0.187 | 201 |
+| `6fa473e88b` | `a4a143a-dirty` | final | M3 Cox proportional hazards | 24m | 0.757 | 0.759 | 0.752 | 0.191 | 45 |
+| `ecf789913e` | `a4a143a-dirty` | experiment | M2 + leak: days to last hearing | 24m | 0.999 | 0.997 | 0.995 | 0.017 | 52 |
+| `f1de46cf60` | `a4a143a-dirty` | experiment | M2 + leak: defendant's advocate named | 24m | 0.826 | 0.796 | 0.790 | 0.185 | 172 |
+| `6370b06b3b` | `a4a143a-dirty` | experiment | M2 court + timing features only | 24m | 0.711 | 0.679 | 0.678 | 0.213 | 42 |
+| `dae581640d` | `a4a143a-dirty` | experiment | M2 case + timing features only | 24m | 0.780 | 0.770 | 0.778 | 0.187 | 34 |
+| `e37e37744d` | `a4a143a-dirty` | experiment | M2 without court and district IDs | 24m | 0.818 | 0.803 | 0.797 | 0.175 | 115 |
+| `de21eb9582` | `a4a143a-dirty` | experiment | M2 12-month label | 12m | 0.823 | 0.806 | 0.813 | 0.184 | 108 |
+| `d7acddc100` | `a4a143a-dirty` | experiment | M2 trained on 2012-2014 only | 24m | 0.821 | 0.791 | 0.791 | 0.188 | 179 |
+| `67d928e3ec` | `f8c49c7-dirty` | evaluation | M2 vs B1 on test (bootstrap, calibration, threshold) | 24m |  | 0.793 | 0.789 | 0.176 | 739 |
+
+</details>
 
 ## Sources and licences
 
