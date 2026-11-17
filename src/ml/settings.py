@@ -117,10 +117,18 @@ def load(profile: str | None = None) -> Settings:
     )
 
 
+# Files the pipeline itself rewrites. A run that regenerates them is still running the committed code, so changes here
+# do not make the commit "dirty"; any other tracked change (code, SQL, config) does.
+GENERATED = ["reports", "data/mart", "outputs", "docs/model_card.md", "README.md"]
+
+
 def git_commit() -> str:
+    """The commit the code ran from, with "-dirty" if code, SQL or config differ from it."""
     try:
         out = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=True)
-        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+        paths = ["--", "."] + [f":(exclude){p}" for p in GENERATED]
+        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no", *paths], cwd=ROOT,
+                               capture_output=True, text=True).stdout.strip()
         return out.stdout.strip() + ("-dirty" if dirty else "")
     except (OSError, subprocess.CalledProcessError):
         return "unknown"

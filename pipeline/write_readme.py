@@ -29,10 +29,21 @@ def ml_inputs() -> dict | None:
     exp = pd.read_csv(REPORTS / "experiments.csv")
     session = exp[(exp["stage"] == "final") & (exp["model"] == "M2 LightGBM")].iloc[-1]["session"]
     runs = exp[exp["session"] == session]
+    ev = exp[exp["stage"] == "evaluation"].iloc[-1]
+    # The runs the README quotes (the latest training session and its evaluation) and the commit they ran from.
+    cited = runs.index.union([ev.name])
     return {"res": res, "exp": exp, "runs": runs, "train": json.loads((REPORTS / "train_summary.json").read_text()),
             "sample": json.loads((REPORTS / "sample_summary.json").read_text()),
             "splits": pd.read_csv(REPORTS / "split_summary.csv").set_index("split"),
-            "eval": exp[exp["stage"] == "evaluation"].iloc[-1]}
+            "eval": ev, "cited": exp.loc[cited], "earlier": exp.drop(cited),
+            "commit": ", ".join(dict.fromkeys(exp.loc[cited, "git_commit"].astype(str)))}
+
+
+def commit_ref(m: dict) -> str:
+    """The commit the quoted runs ran from, linked on GitHub when it is one commit with no uncommitted changes."""
+    c = m["commit"]
+    clean = c != "unknown" and "," not in c and not c.endswith("-dirty")
+    return f"[`{c}`]({REPOSITORY}/commit/{c})" if clean else f"`{c}`"
 
 
 def run_id(m: dict, model: str, stage: str = "final") -> str:
@@ -74,7 +85,7 @@ cases, {g['resamples']:,} resamples). On courts held out of training entirely it
 
 M2 is shown after isotonic recalibration on 2015. Flagging cases whose calibrated chance of a decision within 24 months
 is below 0.5 marks {th['flagged_share']:.0%} of 2016 filings, with precision {th['precision_delay']:.0%} and recall {th['recall_delay']:.0%} for overruns.
-Every number above is from logged runs `{run_id(m, 'M2 LightGBM')}` (M2) and `{m['eval']['run_id']}` (evaluation); the full log is below.
+Every number above is from logged runs `{run_id(m, 'M2 LightGBM')}` (M2) and `{m['eval']['run_id']}` (evaluation), run from commit {commit_ref(m)}; the log is below.
 
 ```mermaid
 flowchart LR
@@ -106,19 +117,36 @@ Train / valid / test: {split.loc['train', 'cases']:,} / {split.loc['valid', 'cas
 def experiment_log(m: dict) -> str:
     def fmt(v):
         return "" if pd.isna(v) or v == "" else f"{float(v):.3f}"
-    lines = ["| Run | Stage | Model | Label | Valid AUC | Test AUC | Unseen-court AUC | Test Brier | Seconds |", "|---|---|---|---|---|---|---|---|---|"]
-    for r in m["exp"].itertuples():
-        lines.append(f"| `{r.run_id}` | {r.stage} | {r.model} | {str(r.label).replace('label_', '')} | {fmt(r.valid_auc)} | {fmt(r.test_auc)} | "
-                     f"{fmt(r.test_unseen_auc)} | {fmt(r.test_brier)} | {float(r.runtime_s):,.0f} |")
+
+    def table(d: pd.DataFrame) -> str:
+        lines = ["| Run | Commit | Stage | Model | Label | Valid AUC | Test AUC | Unseen-court AUC | Test Brier | Seconds |",
+                 "|---|---|---|---|---|---|---|---|---|---|"]
+        for r in d.itertuples():
+            lines.append(f"| `{r.run_id}` | `{r.git_commit}` | {r.stage} | {r.model} | {str(r.label).replace('label_', '')} | {fmt(r.valid_auc)} | "
+                         f"{fmt(r.test_auc)} | {fmt(r.test_unseen_auc)} | {fmt(r.test_brier)} | {float(r.runtime_s):,.0f} |")
+        return chr(10).join(lines)
+
+    earlier = m["earlier"]
+    folded = f"""
+<details>
+<summary>{len(earlier)} earlier runs, superseded by the ones above</summary>
+
+A commit ending in `-dirty` means the code, SQL or config differed from that commit when the run started.
+
+{table(earlier)}
+
+</details>
+""" if len(earlier) else ""
     return f"""## Experiment log
 
-Every run of the delay-risk model, from [reports/experiments.csv](reports/experiments.csv), which also records each run's
-parameters, feature version, split version, row counts, config hash and git commit. Grid candidates carry no test
-metrics: the test set was scored only by the models chosen on validation. Stages: `final` models, `grid` candidates,
-`experiment` (leakage tests, ablations, the 12-month label), `evaluation` (bootstrap intervals and threshold).
+The runs every number in this README comes from: one training session and its evaluation, run from commit {commit_ref(m)}.
+[reports/experiments.csv](reports/experiments.csv) keeps every run, with its parameters, feature version, split version,
+row counts, config hash and commit. Grid candidates carry no test metrics: the test set was scored only by the models
+chosen on validation. Stages: `final` models, `grid` candidates, `experiment` (leakage tests, ablations, the 12-month
+label), `evaluation` (bootstrap intervals and threshold).
 
-{chr(10).join(lines)}
-"""
+{table(m["cited"])}
+{folded}"""
 
 
 def readme(f: dict, t: dict, m: dict | None = None) -> str:
@@ -360,7 +388,7 @@ def resume_ml(m: dict) -> str:
     gc = res["gaps"]["m2_vs_b1_court"]
     leak = train["experiments"]["leak_last_hearing"]
     m2_valid = float(m["runs"][(m["runs"]["model"] == "M2 LightGBM") & (m["runs"]["stage"] == "final")].iloc[-1]["valid_auc"])
-    n_runs = len(m["exp"])
+    n_runs = len(m["cited"])
     return (
         f"Built a filing-time delay-risk model (LightGBM) on a {m['sample']['sampled'] / 1e6:.1f}M-case stratified sample of "
         f"{m['sample']['population'] / 1e6:.1f}M labelable cases: test ROC-AUC {t['m2']['roc_auc']:.3f} on 2016 filings against "
@@ -374,7 +402,7 @@ def resume_ml(m: dict) -> str:
         f"Engineered it as DuckDB SQL + Makefile + config: censoring-aware labels with 6 invariant checks, point-in-time court "
         f"history verified by truncation tests, a leakage test (one post-filing field lifted validation AUC from {m2_valid:.3f} "
         f"to {leak['valid_auc']:.3f}), {n_runs} runs logged to MLflow and CSV, CI on a synthetic fixture.\n"
-        f"(Runs: M2 {run_id(m, 'M2 LightGBM')}, evaluation {m['eval']['run_id']}, leak {leak['run_id']}.)\n"
+        f"(Commit {m['commit']}; runs: M2 {run_id(m, 'M2 LightGBM')}, evaluation {m['eval']['run_id']}, leak {leak['run_id']}.)\n"
     )
 
 
@@ -393,7 +421,8 @@ def interview_ml(m: dict) -> str:
 ## Delay-risk model
 
 Report: reports/ml_poc_report.md. Model card: docs/model_card.md. Run IDs: M2 `{run_id(m, 'M2 LightGBM')}`, B1
-`{run_id(m, 'B1 court prior-year disposal rate')}`, evaluation `{m['eval']['run_id']}`, leakage `{leak['run_id']}`.
+`{run_id(m, 'B1 court prior-year disposal rate')}`, evaluation `{m['eval']['run_id']}`, leakage `{leak['run_id']}`, all run from
+commit `{m['commit']}`.
 
 **Thirty seconds.** I asked whether you can tell at filing if a case will be decided within 24 months, and how much a
 model adds over the court's own history. LightGBM reaches a test ROC-AUC of {t['m2']['roc_auc']:.3f} on 2016 filings against

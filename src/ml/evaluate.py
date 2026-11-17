@@ -281,6 +281,8 @@ def run(s: Settings) -> dict:
     preds["m2_cal"] = calibrate(preds, "m2", s)
     preds["m1_cal"] = calibrate(preds, "m1", s)
     results: dict = {"profile": s.profile, "feature_version": feature_version(s), "split_version": split_version(s)}
+    # Opened first, so the row records the commit as it was when the evaluation started.
+    tracker = Tracker(s, results["feature_version"], results["split_version"])
 
     # 1. Metrics on the seen-court and unseen-court test splits.
     seen = metrics_table(preds, "test")
@@ -378,7 +380,6 @@ def run(s: Settings) -> dict:
     pd.DataFrame(capacity).to_parquet(s.mart / "ml_capacity.parquet", index=False)
 
     # Log the evaluation itself, so the interval and threshold figures trace to an experiments.csv row.
-    tracker = Tracker(s, results["feature_version"], results["split_version"])
     g, gc = results["gaps"]["m2_vs_b1_case"], results["gaps"]["m2_vs_b1_court"]
     th = results["threshold"]["test"]
     cal = results["test"]["m2_cal"]
