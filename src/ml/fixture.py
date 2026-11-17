@@ -11,6 +11,7 @@ one district whose closures go unrecorded.
 from __future__ import annotations
 
 import argparse
+from datetime import date
 from pathlib import Path
 
 import numpy as np
@@ -149,6 +150,10 @@ def build_cases(df: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame:
     out.loc[after, "date_of_decision"] = pd.Timestamp("2031-03-01")  # V03
     for c in ["date_of_filing", "date_of_decision", "date_first_list", "date_last_list", "date_next_list"]:
         out[c] = [v.date() if pd.notna(v) else None for v in pd.to_datetime(out[c])]
+    # The real files use 5000-01-01 as a placeholder last-hearing date (rule V09). It is beyond what a nanosecond
+    # timestamp can hold, so it must be handled before any date arithmetic in pandas.
+    for i in idx[300:340]:
+        out.at[i, "date_last_list"] = date(5000, 1, 1)
     return out
 
 
