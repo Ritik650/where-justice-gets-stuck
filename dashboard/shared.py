@@ -26,29 +26,52 @@ NJDG_NAME = {"Daman and Diu": "The Dadra and Nagar Haveli and Daman and Diu", "D
 DIMENSIONS = ["Completeness", "Validity", "Consistency", "Uniqueness", "Linkage"]
 
 
+def _stamp(path: Path) -> int:
+    """Last-modified time of a file. Part of every cache key, so an updated file is never served from a stale cache."""
+    return path.stat().st_mtime_ns
+
+
 @st.cache_data(show_spinner=False, max_entries=64)
+def _read_parquet(path: str, stamp: int) -> pd.DataFrame:
+    return pd.read_parquet(path)
+
+
 def table(name: str) -> pd.DataFrame:
-    return pd.read_parquet(MART / f"{name}.parquet")
+    path = MART / f"{name}.parquet"
+    return _read_parquet(str(path), _stamp(path))
 
 
 @st.cache_data(show_spinner=False, max_entries=8)
+def _read_csv(path: str, stamp: int) -> pd.DataFrame:
+    return pd.read_csv(path, dtype=str, keep_default_na=False)
+
+
 def csv(path: str) -> pd.DataFrame:
-    return pd.read_csv(ROOT / path, dtype=str, keep_default_na=False)
+    full = ROOT / path
+    return _read_csv(str(full), _stamp(full))
 
 
 @st.cache_data(show_spinner=False)
-def findings() -> dict:
+def _findings(stamp: int) -> dict:
     return json.loads((MART / "findings.json").read_text())
 
 
+def findings() -> dict:
+    return _findings(_stamp(MART / "findings.json"))
+
+
 @st.cache_data(show_spinner=False)
-def rule_sql() -> dict[str, str]:
-    """Each rule's SQL, as written in the catalogue."""
+def _rule_sql(stamp: int) -> dict[str, str]:
     out = {}
     for block in re.split(r"(?m)^(?=-- id: )", (ROOT / "sql" / "dq_rules.sql").read_text(encoding="utf8"))[1:]:
         rid = re.search(r"(?m)^-- id: (\S+)", block).group(1)
         out[rid] = "\n".join(line for line in block.splitlines() if not line.startswith("--")).strip()
     return out
+
+
+def rule_sql() -> dict[str, str]:
+    """Each rule's SQL, as written in the catalogue."""
+    return _rule_sql(_stamp(ROOT / "sql" / "dq_rules.sql"))
 
 
 def show(chart, description: str, alt_text: str | None = None) -> None:
