@@ -527,7 +527,8 @@ def state_acts(con) -> None:
             SELECT s.state_name AS state, b.act_canonical, count(*) AS n, count(*) FILTER (b.usable AND NOT b.closed) AS open_at_cutoff
             FROM base b JOIN dim_state s USING (state_code) GROUP BY 1, 2
         )
-        SELECT * FROM x QUALIFY row_number() OVER (PARTITION BY state ORDER BY open_at_cutoff DESC) <= 12
+        -- The act name breaks ties, so a tie at twelfth place cannot pick a different act on each run.
+        SELECT * FROM x QUALIFY row_number() OVER (PARTITION BY state ORDER BY open_at_cutoff DESC, n DESC, act_canonical) <= 12
     """).df()
     save(df, "state_acts")
 

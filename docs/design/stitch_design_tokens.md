@@ -9,6 +9,12 @@ The dashboard design was generated with Google Stitch (project `1818959159268607
 | Main dashboard: header note, four KPI cards, question switcher, map beside a ranked table, caveats, data-quality scores, sources | `dashboard/app_pages/findings.py` |
 | State Profile (`424014fbd0584ba88e12167e8f0b0e5b`): state selector, six KPI cards with national comparisons, survival and stage charts, district and act tables | `dashboard/app_pages/state_profile.py` |
 | Data Quality (`002b4e75639043299b0f9bbe15e03741`): Scorecard, Rules, Issue log and Coverage views, a heat table and a trend by filing year | `dashboard/app_pages/data_quality.py` |
+| Delay risk model (generated 17 Nov 2026 with the same design system; the Stitch API's screen listing did not return its ID): standfirst and research-only notice, four KPI cards, model comparison table beside a calibration chart, a what-if row of State, District, Court and Case type selectors with a result figure and comparison bars, and a weakest-slices table | `dashboard/app_pages/delay_risk.py` |
+
+The always-on GitHub Pages copy (`pipeline/site_template/`, built by `pipeline/build_site.py`) reuses the HTML Stitch
+generated for the State Profile and Data Quality screens: the Tailwind token configuration, the sticky header and
+navigation, KPI cards, bordered panels, ledger tables, tab-style segmented controls, chips and the footer. The same
+invented organisation name, extra navigation items and export buttons were left out.
 
 ## Tokens
 

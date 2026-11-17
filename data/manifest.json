@@ -1,0 +1,153 @@
+{
+ "files": {
+  "license.txt": {
+   "bytes": 25664,
+   "sha256": "ad98c40e6ee53de8ddb7afbe06ff3b71fec1af8151ed695379964ea2e0c2844e",
+   "hashed_on": "2026-11-17",
+   "crc32": "f8f6273f"
+  },
+  "csv/keys/keys.tar.gz": {
+   "bytes": 66487006,
+   "sha256": "7e527aa084fc0156210dcd4e93738622b72067cb52f293d02c5e6c0439487427",
+   "hashed_on": "2026-11-17",
+   "crc32": "2efbec9d"
+  },
+  "csv/cases/cases.tar.gz": {
+   "bytes": 1408822378,
+   "sha256": "9020a39ef1a5730d450441f78519250767bfc0f17a92ec0cc55c1f1bb372a01e",
+   "hashed_on": "2026-11-17",
+   "crc32": "49e0d61f"
+  },
+  "csv/acts_sections.tar.gz": {
+   "bytes": 567429886,
+   "sha256": "80956e094bea9d7bcab6be3297dff561f6a8957bb56f50ffa7932a8d1d65fd52",
+   "hashed_on": "2026-11-17",
+   "crc32": "d304468e"
+  },
+  "csv/judges_clean.tar.gz": {
+   "bytes": 883888,
+   "sha256": "35ec21f0e84e43d481cfa4d88cf3545602c306e68e5c2bdbb2c0160a906569f6",
+   "hashed_on": "2026-11-17",
+   "crc32": "a55aa7c9"
+  }
+ },
+ "source": "eCourts case records filed 2010-2018 (CSV copies only)",
+ "url": "https://www.dropbox.com/sh/hkcde3z2l1h9mq1/AADRe-BuBQ92ozAJiG7YERdCa?dl=1",
+ "downloaded": "2026-11-17",
+ "parquet": {
+  "act_key": {
+   "rows": 29857,
+   "bytes": 380362,
+   "csv_rows": 29857
+  },
+  "acts_sections": {
+   "rows": 76811357,
+   "bytes": 550434028,
+   "csv_rows": 76811357
+  },
+  "cases_2010": {
+   "rows": 4281327,
+   "bytes": 45068597,
+   "csv_rows": 4281327
+  },
+  "cases_2011": {
+   "rows": 5208653,
+   "bytes": 54082287,
+   "csv_rows": 5208653
+  },
+  "cases_2012": {
+   "rows": 6400783,
+   "bytes": 64723200,
+   "csv_rows": 6400783
+  },
+  "cases_2013": {
+   "rows": 7555617,
+   "bytes": 72229539,
+   "csv_rows": 7555617
+  },
+  "cases_2014": {
+   "rows": 8874616,
+   "bytes": 79536703,
+   "csv_rows": 8874616
+  },
+  "cases_2015": {
+   "rows": 10475876,
+   "bytes": 89244453,
+   "csv_rows": 10475876
+  },
+  "cases_2016": {
+   "rows": 11349260,
+   "bytes": 89896999,
+   "csv_rows": 11349260
+  },
+  "cases_2017": {
+   "rows": 13065513,
+   "bytes": 95023641,
+   "csv_rows": 13065513
+  },
+  "cases_2018": {
+   "rows": 13724299,
+   "bytes": 90547081,
+   "csv_rows": 13724299
+  },
+  "cases_court_key": {
+   "rows": 59428,
+   "bytes": 173666,
+   "csv_rows": 59428
+  },
+  "cases_district_key": {
+   "rows": 632,
+   "bytes": 12520,
+   "csv_rows": 632
+  },
+  "cases_state_key": {
+   "rows": 287,
+   "bytes": 2752,
+   "csv_rows": 287
+  },
+  "disp_name_key": {
+   "rows": 462,
+   "bytes": 3487,
+   "csv_rows": 462
+  },
+  "judge_case_merge_key": {
+   "rows": 12901146,
+   "bytes": 50495770,
+   "csv_rows": 12901146
+  },
+  "judges_clean": {
+   "rows": 98478,
+   "bytes": 458080,
+   "csv_rows": 98478
+  },
+  "purpose_name_key": {
+   "rows": 68125,
+   "bytes": 433091,
+   "csv_rows": 68125
+  },
+  "section_key": {
+   "rows": 2113919,
+   "bytes": 16182457,
+   "csv_rows": 2113919
+  },
+  "type_name_key": {
+   "rows": 62714,
+   "bytes": 394136,
+   "csv_rows": 62714
+  }
+ },
+ "external": {
+  "census2011_districts_raw.csv": {
+   "bytes": 447267,
+   "sha256": "4ebdf7e5dcf7d5c83446f5700c3128edf0bd579898a609b00d3e6fa7085932be"
+  },
+  "district_crosswalk_overrides.csv": {
+   "bytes": 5229,
+   "sha256": "68c521fdb3f9f30baa93b645643b3467214e3031e3e7fb74269322f04df61351"
+  },
+  "njdg_state_pendency_2026-07-30.csv": {
+   "bytes": 1118,
+   "sha256": "5b92a03f74e5c79d20f9b5197a0be954eeb741150d60309dfe48d2fc761a1cf0"
+  }
+ }
+}

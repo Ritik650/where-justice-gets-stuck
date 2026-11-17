@@ -23,17 +23,17 @@
   "q2_open_5y": 0.1853273090555054,
   "q2_categories": {
    "Criminal trial (magistrate)": 633.0,
-   "Other / unmapped": 538.0,
-   "Sessions trial": 590.0,
-   "Bail": 9.0,
-   "Criminal misc. / appeal": 73.0,
-   "Family / matrimonial": 409.0,
-   "Civil misc. / appeal": 486.0,
-   "Motor accident claim": 612.0,
-   "Civil suit": 983.0,
-   "Traffic / petty offence": 26.0,
    "Cheque bounce (NI Act)": 740.0,
-   "Execution": 737.0
+   "Sessions trial": 590.0,
+   "Civil suit": 983.0,
+   "Other / unmapped": 538.0,
+   "Motor accident claim": 612.0,
+   "Civil misc. / appeal": 486.0,
+   "Traffic / petty offence": 26.0,
+   "Criminal misc. / appeal": 73.0,
+   "Execution": 737.0,
+   "Family / matrimonial": 409.0,
+   "Bail": 9.0
   },
   "q2_slowest_state": "Bihar",
   "q2_slowest_state_km": 1870.0,
@@ -97,20 +97,20 @@
   "q4_trial_pair_gap": 464.0,
   "q4_tenure_strata": 1712,
   "q4_tenure_cases": 1182026,
-  "q4_tenure_gap": -0.017613101076073744,
+  "q4_tenure_gap": -0.017613101076073747,
   "q4_tenure_by_category": {
    "Bail": {
-    "gap": 4.315765115905539e-05,
+    "gap": 4.315765115905547e-05,
     "stays": 0.9992478316154499,
     "leaves": 0.9992909892666089
    },
    "Criminal misc. / appeal": {
-    "gap": -0.0010597169268893782,
+    "gap": -0.001059716926889374,
     "stays": 0.8696804466558714,
     "leaves": 0.8686207297289821
    },
    "Criminal trial (magistrate)": {
-    "gap": -0.028950761809193093,
+    "gap": -0.028950761809193096,
     "stays": 0.5375010721873733,
     "leaves": 0.5085503103781802
    },
@@ -158,9 +158,9 @@
    "km_median_days": 16.0
   },
   "q5_state_excl_flagged": {
-   "Uttar Pradesh": 644.0,
    "Assam": 354.0,
-   "Bihar": 1548.0
+   "Bihar": 1548.0,
+   "Uttar Pradesh": 644.0
   },
   "q6_roles": {
    "Defendant": {
@@ -257,26 +257,26 @@
    "days": 122.0
   },
   "q10_rows": 300000,
-  "q10_concordance": 0.7046479284620799,
-  "q10_shift": 0.010738161883196306,
+  "q10_concordance": 0.704521120764378,
+  "q10_shift": 0.00744444404770582,
   "q10_slow": [
    {
-    "state": "Bihar",
-    "ratio": 0.42805739459262365
+    "state": "Odisha",
+    "ratio": 0.4238722861606586
    },
    {
-    "state": "Odisha",
-    "ratio": 0.4302311196722276
+    "state": "Bihar",
+    "ratio": 0.4287843258458057
    }
   ],
   "q10_fast": {
    "state": "Karnataka",
-   "ratio": 1.7061379674719188
+   "ratio": 1.705155921764756
   },
-  "q10_state_spread": 3.9857691726027227,
-  "q10_bail": 8.708292055673224,
-  "q10_def_advocate": 0.7906026908681866,
-  "q10_woman_petitioner": 0.912290051889711,
+  "q10_state_spread": 4.022805872046227,
+  "q10_bail": 8.467629556108937,
+  "q10_def_advocate": 0.7728639752095429,
+  "q10_woman_petitioner": 0.9105229316887277,
   "cov_corr": 0.9768864009004726,
   "cov_2010": 4281327,
   "cov_2018": 13724299,
@@ -343,8 +343,8 @@
   },
   "q10": {
    "question": "What drives delay?",
-   "finding": "Case mix does not explain the gaps between states. With case type, filing year and the people involved held constant, a case closes at 0.43 times the rate of a comparable Maharashtra case in Bihar and 0.43 in Odisha, against 1.71 in Karnataka: a 4.0-fold gap. Cases with a named defendant's advocate close 21% more slowly, and those with a woman petitioner 9% more slowly.",
-   "caveat": "A Cox model on a random sample of 3 lakh cases, with a concordance of 0.70; a second sample moved the ratios by a median of 1.1%. A ratio averages over time, and the data has no judge numbers or caseload per judge. These are associations: a named advocate often marks a contested case."
+   "finding": "Case mix does not explain the gaps between states. With case type, filing year and the people involved held constant, a case closes at 0.42 times the rate of a comparable Maharashtra case in Odisha and 0.43 in Bihar, against 1.71 in Karnataka: a 4.0-fold gap. Cases with a named defendant's advocate close 23% more slowly, and those with a woman petitioner 9% more slowly.",
+   "caveat": "A Cox model on a random sample of 3 lakh cases, with a concordance of 0.70; a second sample moved the ratios by a median of 0.7%. A ratio averages over time, and the data has no judge numbers or caseload per judge. These are associations: a named advocate often marks a contested case."
   }
  }
 }

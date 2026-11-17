@@ -1,0 +1,673 @@
+{
+ "profile": "full",
+ "feature_version": "v1-38f6775d",
+ "split_version": "771b545cad169d21",
+ "test": {
+  "b0": {
+   "model": "B0 majority class",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.5,
+   "pr_auc": 0.6444958395499929,
+   "pr_auc_delay": 0.3555041604500071,
+   "brier": 0.24744875330784782,
+   "log_loss": 0.68804413095127,
+   "ece": 0.13538020887524557
+  },
+  "b1": {
+   "model": "B1 court prior-year rate",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.6789994310181802,
+   "pr_auc": 0.7854725234389728,
+   "pr_auc_delay": 0.5192404725958646,
+   "brier": 0.2090330454551111,
+   "log_loss": 0.6052033844369311,
+   "ece": 0.009332442448554749
+  },
+  "b2": {
+   "model": "B2 court x case-type prior-year rate",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.7463162436853555,
+   "pr_auc": 0.851690666248403,
+   "pr_auc_delay": 0.5650430216598434,
+   "brier": 0.19068016604882929,
+   "log_loss": 0.5552228496927532,
+   "ece": 0.01020065467376877
+  },
+  "b1b": {
+   "model": "B1b court 24-month rate, 3-year-old cohort",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.6400486905747252,
+   "pr_auc": 0.7570458194950609,
+   "pr_auc_delay": 0.4760443704854837,
+   "brier": 0.21696007113841856,
+   "log_loss": 0.623311849755275,
+   "ece": 0.014034740016386068
+  },
+  "m1": {
+   "model": "M1 logistic regression",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.7642359881260928,
+   "pr_auc": 0.8662787564518724,
+   "pr_auc_delay": 0.6074128436039344,
+   "brier": 0.19072694701676499,
+   "log_loss": 0.5558972249027571,
+   "ece": 0.06745093100801988
+  },
+  "m2": {
+   "model": "M2 LightGBM",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.7926269814767699,
+   "pr_auc": 0.8847815534367849,
+   "pr_auc_delay": 0.6384611013045809,
+   "brier": 0.18662456203465547,
+   "log_loss": 0.5533783858201338,
+   "ece": 0.07875430950355439
+  },
+  "m3": {
+   "model": "M3 Cox (P(decided by day 730))",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.7592078515262921,
+   "pr_auc": 0.8601971903215968,
+   "pr_auc_delay": 0.5959049550559965,
+   "brier": 0.19126150769417716,
+   "log_loss": 0.5589744432311439,
+   "ece": 0.06500486544494867
+  },
+  "m2_cal": {
+   "model": "M2 LightGBM, calibrated",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.7926269814767699,
+   "pr_auc": 0.8847815534367849,
+   "pr_auc_delay": 0.6384611013045809,
+   "brier": 0.17603297887434058,
+   "log_loss": 0.5150829875370105,
+   "ece": 0.025151352686025728
+  },
+  "m1_cal": {
+   "model": "M1 logistic regression, calibrated",
+   "n": 548258,
+   "positive_rate": 0.6444958395499929,
+   "roc_auc": 0.7642359881260928,
+   "pr_auc": 0.8662787564518724,
+   "pr_auc_delay": 0.6074128436039344,
+   "brier": 0.18571506814507516,
+   "log_loss": 0.540345378783743,
+   "ece": 0.030140724411864606
+  }
+ },
+ "test_unseen": {
+  "b0": {
+   "model": "B0 majority class",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.5,
+   "pr_auc": 0.6630287342733053,
+   "pr_auc_delay": 0.3369712657266946,
+   "brier": 0.24711087526058448,
+   "log_loss": 0.6873682999727885,
+   "ece": 0.15391310359855806
+  },
+  "b1": {
+   "model": "B1 court prior-year rate",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.6789388538260479,
+   "pr_auc": 0.7962060946051321,
+   "pr_auc_delay": 0.4958676450422046,
+   "brier": 0.20487050744512045,
+   "log_loss": 0.5958666941332821,
+   "ece": 0.035586955795157735
+  },
+  "b2": {
+   "model": "B2 court x case-type prior-year rate",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.7399717316852573,
+   "pr_auc": 0.8609280381998108,
+   "pr_auc_delay": 0.5200060525510637,
+   "brier": 0.18829276884059873,
+   "log_loss": 0.545786203459379,
+   "ece": 0.027916045655598683
+  },
+  "b1b": {
+   "model": "B1b court 24-month rate, 3-year-old cohort",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.6299007235214049,
+   "pr_auc": 0.7587000270486012,
+   "pr_auc_delay": 0.4425384961432859,
+   "brier": 0.2149013705947081,
+   "log_loss": 0.6196711627847402,
+   "ece": 0.053214010120507825
+  },
+  "m1": {
+   "model": "M1 logistic regression",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.7412761686155007,
+   "pr_auc": 0.8545004053377181,
+   "pr_auc_delay": 0.5652550015065849,
+   "brier": 0.19969816691310222,
+   "log_loss": 0.5846009678529499,
+   "ece": 0.08820531757209792
+  },
+  "m2": {
+   "model": "M2 LightGBM",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.7893379788453638,
+   "pr_auc": 0.8862430661131017,
+   "pr_auc_delay": 0.6225678024676614,
+   "brier": 0.17690182724541742,
+   "log_loss": 0.5243190818033922,
+   "ece": 0.04418765706178506
+  },
+  "m3": {
+   "model": "M3 Cox (P(decided by day 730))",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.7524611888534278,
+   "pr_auc": 0.8654198398230812,
+   "pr_auc_delay": 0.5688117531416368,
+   "brier": 0.19049153939079047,
+   "log_loss": 0.5623353460905958,
+   "ece": 0.07106072036896588
+  },
+  "m2_cal": {
+   "model": "M2 LightGBM, calibrated",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.7893379788453638,
+   "pr_auc": 0.8862430661131017,
+   "pr_auc_delay": 0.6225678024676614,
+   "brier": 0.17332405816548627,
+   "log_loss": 0.5138415627,
+   "ece": 0.020001101147959856
+  },
+  "m1_cal": {
+   "model": "M1 logistic regression, calibrated",
+   "n": 80357,
+   "positive_rate": 0.6630287342733053,
+   "roc_auc": 0.7412761686155007,
+   "pr_auc": 0.8545004053377181,
+   "pr_auc_delay": 0.5652550015065849,
+   "brier": 0.1930066685646718,
+   "log_loss": 0.5647028209642687,
+   "ece": 0.0614908619969781
+  }
+ },
+ "valid": {
+  "b0": {
+   "model": "B0 majority class",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.5,
+   "pr_auc": 0.6288600721976009,
+   "pr_auc_delay": 0.37113992780239907,
+   "brier": 0.24773381306884917,
+   "log_loss": 0.6886143136511038,
+   "ece": 0.1197444415228537
+  },
+  "b1": {
+   "model": "B1 court prior-year rate",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.687090376314921,
+   "pr_auc": 0.7800921004636383,
+   "pr_auc_delay": 0.540869739846356,
+   "brier": 0.209696813680144,
+   "log_loss": 0.606112699136384,
+   "ece": 0.0016825312189687836
+  },
+  "b2": {
+   "model": "B2 court x case-type prior-year rate",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.7422869986198404,
+   "pr_auc": 0.8430120356468527,
+   "pr_auc_delay": 0.5742247541932252,
+   "brier": 0.19357183676261916,
+   "log_loss": 0.5604243798478474,
+   "ece": 0.005093452347544036
+  },
+  "b1b": {
+   "model": "B1b court 24-month rate, 3-year-old cohort",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.6355211638502352,
+   "pr_auc": 0.7390543897366633,
+   "pr_auc_delay": 0.4890459945691627,
+   "brier": 0.22008110994647412,
+   "log_loss": 0.6300298587945691,
+   "ece": 0.009375056025710045
+  },
+  "m1": {
+   "model": "M1 logistic regression",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.7837879080536995,
+   "pr_auc": 0.8698475556173961,
+   "pr_auc_delay": 0.6515490442695429,
+   "brier": 0.18341333851919675,
+   "log_loss": 0.5364151939258276,
+   "ece": 0.044033140195571946
+  },
+  "m2": {
+   "model": "M2 LightGBM",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.8213942968718917,
+   "pr_auc": 0.894287805811282,
+   "pr_auc_delay": 0.7086516771276617,
+   "brier": 0.17109540323711556,
+   "log_loss": 0.5090443812169132,
+   "ece": 0.053965225293056106
+  },
+  "m3": {
+   "model": "M3 Cox (P(decided by day 730))",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.75713994914428,
+   "pr_auc": 0.8507138917581529,
+   "pr_auc_delay": 0.6096198289014683,
+   "brier": 0.1917912569875847,
+   "log_loss": 0.5587197541630797,
+   "ece": 0.041314197145245965
+  },
+  "m2_cal": {
+   "model": "M2 LightGBM, calibrated",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.8213942968718917,
+   "pr_auc": 0.894287805811282,
+   "pr_auc_delay": 0.7086516771276617,
+   "brier": 0.16514252448303293,
+   "log_loss": 0.48822513699875925,
+   "ece": 0.0010459306066859105
+  },
+  "m1_cal": {
+   "model": "M1 logistic regression, calibrated",
+   "n": 506111,
+   "positive_rate": 0.6288600721976009,
+   "roc_auc": 0.7837879080536995,
+   "pr_auc": 0.8698475556173961,
+   "pr_auc_delay": 0.6515490442695429,
+   "brier": 0.18016472041642664,
+   "log_loss": 0.526385891143035,
+   "ece": 0.0029596608419380516
+  }
+ },
+ "threshold": {
+  "rule": "flag when calibrated P(decided within 24 months) < 0.5",
+  "value": 0.5,
+  "valid": {
+   "threshold": 0.5,
+   "flagged_share": 0.33981478371345414,
+   "precision_delay": 0.671265931714578,
+   "recall_delay": 0.6146093974595129,
+   "flagged": 171984,
+   "true_positives": 115447
+  },
+  "test": {
+   "threshold": 0.5,
+   "flagged_share": 0.33867084474827547,
+   "precision_delay": 0.6153361446367117,
+   "recall_delay": 0.5861996429084491,
+   "flagged": 185679,
+   "true_positives": 114255
+  }
+ },
+ "capacity": [
+  {
+   "review_share": 0.1,
+   "threshold_from_valid": 0.27429805615550756,
+   "threshold": 0.27429805615550756,
+   "flagged_share": 0.09809797577053139,
+   "precision_delay": 0.7267538069650261,
+   "recall_delay": 0.20054076795205944,
+   "flagged": 53783,
+   "true_positives": 39087
+  },
+  {
+   "review_share": 0.2,
+   "threshold_from_valid": 0.378463476070529,
+   "threshold": 0.378463476070529,
+   "flagged_share": 0.19654797558813553,
+   "precision_delay": 0.6762404996334412,
+   "recall_delay": 0.37387382765202043,
+   "flagged": 107759,
+   "true_positives": 72871
+  },
+  {
+   "review_share": 0.3,
+   "threshold_from_valid": 0.45788336933045354,
+   "threshold": 0.45788336933045354,
+   "flagged_share": 0.2962017882092008,
+   "precision_delay": 0.6322916345946612,
+   "recall_delay": 0.5268177806965337,
+   "flagged": 162395,
+   "true_positives": 102681
+  }
+ ],
+ "gaps": {
+  "m2_vs_b1_case": {
+   "auc_a": 0.7926269814767699,
+   "auc_b": 0.6789994310181802,
+   "gap": 0.11362755045858974,
+   "ci_low": 0.11243434296731757,
+   "ci_high": 0.11495322849811541,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  },
+  "m2_vs_b1_court": {
+   "auc_a": 0.7926269814767699,
+   "auc_b": 0.6789994310181802,
+   "gap": 0.11362755045858974,
+   "ci_low": 0.10545117249316512,
+   "ci_high": 0.12196741414638139,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  },
+  "m2_vs_b2_case": {
+   "auc_a": 0.7926269814767699,
+   "auc_b": 0.7463154455815663,
+   "gap": 0.04631153589520365,
+   "ci_low": 0.04550242615834032,
+   "ci_high": 0.04728158749920874,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  },
+  "b2_vs_b1_case": {
+   "auc_a": 0.7463154455815663,
+   "auc_b": 0.6789994310181802,
+   "gap": 0.0673160145633861,
+   "ci_low": 0.06634559911977368,
+   "ci_high": 0.0682430465775765,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  },
+  "unseen_m2_vs_b1_court": {
+   "auc_a": 0.7893379788453637,
+   "auc_b": 0.6789388538260479,
+   "gap": 0.11039912501931581,
+   "ci_low": 0.08956012196359603,
+   "ci_high": 0.13529225800745007,
+   "resamples": 1000,
+   "share_gap_positive": 1.0
+  }
+ },
+ "worst_slices": [
+  {
+   "dimension": "Court level",
+   "slice": "Family court",
+   "n": 14899,
+   "positive_rate": 0.73313645211088,
+   "auc_m2": 0.640951955438573,
+   "auc_b1": 0.6008917300378303,
+   "brier_m2": 0.21309409657434794,
+   "mean_predicted": 0.6069527422116052,
+   "rankable": true,
+   "auc_gap": 0.04006022540074272
+  },
+  {
+   "dimension": "Court level",
+   "slice": "Motor accident claims tribunal",
+   "n": 3460,
+   "positive_rate": 0.543063583815029,
+   "auc_m2": 0.6492194261350611,
+   "auc_b1": 0.6347036505549704,
+   "brier_m2": 0.24105203936121644,
+   "mean_predicted": 0.5606117217105162,
+   "rankable": true,
+   "auc_gap": 0.014515775580090762
+  },
+  {
+   "dimension": "Case type",
+   "slice": "Execution",
+   "n": 20195,
+   "positive_rate": 0.5193364694231245,
+   "auc_m2": 0.6639375718467182,
+   "auc_b1": 0.5992684924583194,
+   "brier_m2": 0.23300999711743745,
+   "mean_predicted": 0.5069979468184292,
+   "rankable": true,
+   "auc_gap": 0.06466907938839883
+  },
+  {
+   "dimension": "State",
+   "slice": "Delhi",
+   "n": 13035,
+   "positive_rate": 0.6349060222477944,
+   "auc_m2": 0.6680879051784663,
+   "auc_b1": 0.6569864166198898,
+   "brier_m2": 0.2307183181916571,
+   "mean_predicted": 0.5147573358230116,
+   "rankable": true,
+   "auc_gap": 0.011101488558576511
+  },
+  {
+   "dimension": "Case type",
+   "slice": "Civil suit",
+   "n": 52087,
+   "positive_rate": 0.45339528097221954,
+   "auc_m2": 0.6742432121595415,
+   "auc_b1": 0.6370885230861547,
+   "brier_m2": 0.22617898262338204,
+   "mean_predicted": 0.4681104439701476,
+   "rankable": true,
+   "auc_gap": 0.037154689073386815
+  }
+ ],
+ "slice_counts": {
+  "Case type": {
+   "slices": 12,
+   "rankable": 11
+  },
+  "Court level": {
+   "slices": 11,
+   "rankable": 10
+  },
+  "Filing quarter": {
+   "slices": 4,
+   "rankable": 4
+  },
+  "Filing year (2015 is validation)": {
+   "slices": 2,
+   "rankable": 2
+  },
+  "State": {
+   "slices": 32,
+   "rankable": 24
+  }
+ },
+ "importance": [
+  {
+   "feature": "case_type_label",
+   "auc_drop": 0.05837911629203185,
+   "auc_drop_sd": 0.0005489082908041175,
+   "mean_abs_shap": 0.5071423029820215,
+   "gain_share": 0.11501424563341502,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "court_type_disp_rate_py",
+   "auc_drop": 0.03634894311018181,
+   "auc_drop_sd": 0.00016244841434305264,
+   "mean_abs_shap": 0.4570143426372335,
+   "gain_share": 0.19584570350202432,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "act",
+   "auc_drop": 0.02266744225665644,
+   "auc_drop_sd": 0.0003526686906135996,
+   "mean_abs_shap": 0.40568685183174186,
+   "gain_share": 0.03589720175297532,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "court",
+   "auc_drop": 0.01972536924865768,
+   "auc_drop_sd": 0.0008752018724881926,
+   "mean_abs_shap": 0.4718357369909774,
+   "gain_share": 0.39994488490429136,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "case_type",
+   "auc_drop": 0.014590154584324666,
+   "auc_drop_sd": 4.5921804958895895e-05,
+   "mean_abs_shap": 0.13400435558130633,
+   "gain_share": 0.00754481625297878,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "act_section",
+   "auc_drop": 0.01118993060499851,
+   "auc_drop_sd": 9.886211984060097e-05,
+   "mean_abs_shap": 0.24069270851445243,
+   "gain_share": 0.02709612322253619,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "petitioner_advocate",
+   "auc_drop": 0.0030312812927231203,
+   "auc_drop_sd": 3.636555155276558e-05,
+   "mean_abs_shap": 0.11868719088757833,
+   "gain_share": 0.0018491402470942472,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "defendant_gender",
+   "auc_drop": 0.002495882727902391,
+   "auc_drop_sd": 8.050058224112678e-05,
+   "mean_abs_shap": 0.11141910508523108,
+   "gain_share": 0.002629000019512772,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "district",
+   "auc_drop": 0.0023230304704725166,
+   "auc_drop_sd": 0.00013882484563972902,
+   "mean_abs_shap": 0.13613017014888804,
+   "gain_share": 0.09546949421239642,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "petitioner_gender",
+   "auc_drop": 0.001516212873020432,
+   "auc_drop_sd": 4.638048475184538e-05,
+   "mean_abs_shap": 0.03464798086692804,
+   "gain_share": 0.0011434273248011025,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "filing_month",
+   "auc_drop": 0.0013226354251485069,
+   "auc_drop_sd": 3.1424152484498995e-05,
+   "mean_abs_shap": 0.0775623838143035,
+   "gain_share": 0.002868190023099547,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "log_court_pending_at_filing",
+   "auc_drop": 0.0006152538251897507,
+   "auc_drop_sd": 2.2347319682415185e-05,
+   "mean_abs_shap": 0.06222438315893584,
+   "gain_share": 0.021151865160575926,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "court_backlog_months",
+   "auc_drop": 0.0004609737600512383,
+   "auc_drop_sd": 1.4617528317619066e-05,
+   "mean_abs_shap": 0.1706983645000783,
+   "gain_share": 0.05907317925460678,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "court_cohort_rate_lag3",
+   "auc_drop": 0.0003728365446002598,
+   "auc_drop_sd": 4.2140422616102256e-05,
+   "mean_abs_shap": 0.06766623718146735,
+   "gain_share": 0.0036594837531246445,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  },
+  {
+   "feature": "court_disp_rate_py",
+   "auc_drop": 0.00010360425116247758,
+   "auc_drop_sd": 3.6689265841305947e-06,
+   "mean_abs_shap": 0.011808048083208556,
+   "gain_share": 0.002756210392546614,
+   "base_auc": 0.7938003202992892,
+   "rows": 200000
+  }
+ ],
+ "error_causes": [
+  {
+   "error": "False negative: predicted slow, was decided within 24 months",
+   "likely_cause": "Decided on the merits or by plea, faster than this court's history",
+   "cases": 21
+  },
+  {
+   "error": "False negative: predicted slow, was decided within 24 months",
+   "likely_cause": "Closed with a vague 'disposed' label",
+   "cases": 19
+  },
+  {
+   "error": "False negative: predicted slow, was decided within 24 months",
+   "likely_cause": "Ended early: settled, withdrawn or lapsed",
+   "cases": 9
+  },
+  {
+   "error": "False negative: predicted slow, was decided within 24 months",
+   "likely_cause": "Closed by transfer or committal, not resolved (rule X09)",
+   "cases": 1
+  },
+  {
+   "error": "False positive: predicted quick, was not decided within 24 months",
+   "likely_cause": "Never decided; still being heard",
+   "cases": 23
+  },
+  {
+   "error": "False positive: predicted quick, was not decided within 24 months",
+   "likely_cause": "Decided within 4 months after the window closed",
+   "cases": 12
+  },
+  {
+   "error": "False positive: predicted quick, was not decided within 24 months",
+   "likely_cause": "Never decided; no hearing in the 2 years before T_end (possibly an unclosed record)",
+   "cases": 11
+  },
+  {
+   "error": "False positive: predicted quick, was not decided within 24 months",
+   "likely_cause": "Decided, but well after the window",
+   "cases": 4
+  }
+ ],
+ "whatif_rows": 32709,
+ "evaluation_run_id": "67d928e3ec",
+ "seconds": 738.9
+}

@@ -1,0 +1,9 @@
+error,likely_cause,cases
+"False negative: predicted slow, was decided within 24 months","Decided on the merits or by plea, faster than this court's history",21
+"False negative: predicted slow, was decided within 24 months",Closed with a vague 'disposed' label,19
+"False negative: predicted slow, was decided within 24 months","Ended early: settled, withdrawn or lapsed",9
+"False negative: predicted slow, was decided within 24 months","Closed by transfer or committal, not resolved (rule X09)",1
+"False positive: predicted quick, was not decided within 24 months",Never decided; still being heard,23
+"False positive: predicted quick, was not decided within 24 months",Decided within 4 months after the window closed,12
+"False positive: predicted quick, was not decided within 24 months",Never decided; no hearing in the 2 years before T_end (possibly an unclosed record),11
+"False positive: predicted quick, was not decided within 24 months","Decided, but well after the window",4

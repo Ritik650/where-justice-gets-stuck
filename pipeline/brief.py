@@ -146,7 +146,7 @@ def build(figures: dict, text: dict, charts: dict) -> Path:
         (f"{f['q2_km_median']:,.0f} days", f"median to close, open cases counted (closed cases alone: {f['q2_naive_median']:,.0f})"),
         (f"{f['q2_open_5y']:.0%}", "of cases still open after five years"),
     ]
-    kpi_table = Table([[[Paragraph(n, st["kpi_num"]), Paragraph(l, st["kpi_label"])] for n, l in kpis]], colWidths=[full / 4] * 4)
+    kpi_table = Table([[[Paragraph(n, st["kpi_num"]), Paragraph(label, st["kpi_label"])] for n, label in kpis]], colWidths=[full / 4] * 4)
     kpi_table.setStyle(TableStyle([
         ("LINEABOVE", (0, 0), (-1, 0), 0.75, INK), ("LINEBELOW", (0, 0), (-1, 0), 0.5, HAIR),
         ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 8),

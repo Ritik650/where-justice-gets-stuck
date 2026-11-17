@@ -1,10 +1,10 @@
 {
  "rows": 300000,
- "events": 212205,
- "concordance": 0.7046479284620799,
+ "events": 212174,
+ "concordance": 0.704521120764378,
  "seed": 42,
- "seconds": 23,
- "median_shift_between_samples": 0.010738161883196306,
+ "seconds": 60,
+ "median_shift_between_samples": 0.00744444404770582,
  "reference": {
   "category": "Criminal trial (magistrate)",
   "state": "Maharashtra",

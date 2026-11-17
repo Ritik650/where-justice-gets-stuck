@@ -1,0 +1,11 @@
+{
+ "split_version": "771b545cad169d21",
+ "seed": 20261117,
+ "train_years": [
+  2010,
+  2014
+ ],
+ "valid_year": 2015,
+ "test_year": 2016,
+ "unseen_court_share": 0.1
+}

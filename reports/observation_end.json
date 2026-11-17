@@ -1,0 +1,14 @@
+{
+ "latest_filing": "2018-12-31",
+ "latest_decision_raw": "9201-09-27",
+ "latest_decision_plausible": "2020-12-31",
+ "decisions_after_collection_end": 1557,
+ "decisions_after_t_end": 2452161,
+ "t_end": "2018-12-31",
+ "monthly_decisions_2018_mean": 1021279.3333333334,
+ "monthly_decisions_apr_dec_2019_mean": 106801.11111111111,
+ "drop_after_t_end": 0.8954241923582992,
+ "states_last_quarter_below_80pct": [
+  "Odisha"
+ ]
+}

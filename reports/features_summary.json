@@ -1,0 +1,12 @@
+{
+ "rows": 2999990,
+ "features": 25,
+ "feature_version": "v1-38f6775d",
+ "b1_source_shares": {
+  "court": 0.9205,
+  "none": 0.0787,
+  "district": 0.0008,
+  "state": 0.0
+ },
+ "seconds": 74.1
+}

@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    env:
+      MLFLOW_DISABLE_AGENT_HINT: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Lint
+        run: make lint
+      # Row-level case data is not in the repository, so the delay-risk model runs end to end on a synthetic
+      # fixture with the same schema (src/ml/fixture.py): data, dq, features, train, evaluate, report.
+      - name: Delay-risk pipeline on the fixture
+        run: make all PROFILE=fixture
+      # The tests include a check that the fixture build reproduces tests/fixtures/fixture_expected.json, plus the
+      # label, leakage, split and metric tests, every dashboard page, and the reconciliation tests (which skip
+      # without the full build).
+      - name: Tests
+        run: make test

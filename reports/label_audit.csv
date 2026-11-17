@@ -1,0 +1,9 @@
+step,description,rule,rows,dropped
+0,All cases in the case files,,80935944,
+1,Filing date present,C01,80935944,0.0
+2,Filing date within 2010-2018,V02,80935944,0.0
+3,Decision not dated before filing,V01,80590048,345896.0
+4,Decision not dated after collection ended,V03,80588491,1557.0
+5,District's closure records complete,q5_districts flag,80043425,545066.0
+6,12-month window observed (12-month label),Censoring rule,66540566,13502859.0
+7,24-month window observed (main label),Censoring rule,53660034,26383391.0

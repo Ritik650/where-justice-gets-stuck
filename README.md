@@ -2,7 +2,7 @@
 
 Where and why Indian lower courts are delayed, from **80,935,944 cases** filed 2010-2018, with 2026 pendency for context.
 
-**[Open the live dashboard](https://where-justice-gets-stuck.streamlit.app/)** | [Read the two-page brief](outputs/where_justice_gets_stuck_brief.pdf)
+**[Open the live dashboard](https://where-justice-gets-stuck.streamlit.app/)** | [Always-on copy](https://ritik650.github.io/where-justice-gets-stuck/) | [Read the two-page brief](outputs/where_justice_gets_stuck_brief.pdf)
 
 Indian district and subordinate courts held 4.99 crore pending cases in July 2026. This project finds where those cases stall, using case-level records and a data-quality layer that documents every problem found along the way.
 
@@ -27,9 +27,60 @@ The usual measure of delay is misleading. Closed cases alone give a median of **
 | How visible are women in court? | Women are 29% of named petitioners and 15% of defendants, but only about 10% of advocates. Family cases are the exception among litigants, with women as 52% of petitioners. | [chart](outputs/charts/q6_women.png) |
 | How do cases end? | Only 51% of closures are decided on the merits. 20% carry a label too vague to say how the case ended, 10% are settled or sent to Lok Adalat, and 7% are withdrawn or lapse. Cheque-bounce cases stand out: only 25% end on the merits, while 37% are settled or withdrawn. | [chart](outputs/charts/q8_outcomes.png) |
 | How long until the first hearing? | Half of cases get a first hearing within 30 days, but one in ten waits more than 416 days. Among large states the median runs from 1 day in Punjab to 122 days in Odisha. | [chart](outputs/charts/q9_first_hearing.png) |
-| What drives delay? | Case mix does not explain the gaps between states. With case type, filing year and the people involved held constant, a case closes at 0.43 times the rate of a comparable Maharashtra case in Bihar and 0.43 in Odisha, against 1.71 in Karnataka: a 4.0-fold gap. Cases with a named defendant's advocate close 21% more slowly, and those with a woman petitioner 9% more slowly. | [chart](outputs/charts/q10_model.png) |
+| What drives delay? | Case mix does not explain the gaps between states. With case type, filing year and the people involved held constant, a case closes at 0.42 times the rate of a comparable Maharashtra case in Odisha and 0.43 in Bihar, against 1.71 in Karnataka: a 4.0-fold gap. Cases with a named defendant's advocate close 23% more slowly, and those with a woman petitioner 9% more slowly. | [chart](outputs/charts/q10_model.png) |
 
 Every figure has its limits spelled out in [the brief](outputs/where_justice_gets_stuck_brief.pdf), the dashboard and [docs/methods.md](docs/methods.md).
+
+## Delay-risk model
+
+Can we tell, on the day a case is filed, whether it will be decided within 24 months, and how much does a model add over
+each court's own history? A proof of concept on a 3.0M-case sample, trained on filings 2010-2014,
+validated on 2015 and tested on 2016. **[Read the report](reports/ml_poc_report.md)** | [Model card](docs/model_card.md) |
+[Label definition](docs/label_definition.md) | [Feature schema](docs/features.md)
+
+**The answer: mostly the case.** With court features alone (identity, level, history) LightGBM reaches a test ROC-AUC of
+0.679; with case features alone (type, act and section, parties), 0.770. The full model (M2) reaches
+**0.793**, against **0.679** for the court's prior-year disposal rate (B1): a gain of
+**+0.114** (95% interval +0.105 to +0.122 resampling courts; +0.112 to +0.115 resampling
+cases, 1,000 resamples). On courts held out of training entirely it scores 0.789.
+
+| Model (test year 2016) | ROC-AUC | PR-AUC | Brier | ROC-AUC, unseen courts |
+|---|---|---|---|---|
+| B0 majority class | 0.500 | 0.644 | 0.247 | 0.500 |
+| B1 court prior-year rate | 0.679 | 0.785 | 0.209 | 0.679 |
+| B2 court x case-type prior-year rate | 0.746 | 0.852 | 0.191 | 0.740 |
+| M1 logistic regression | 0.764 | 0.866 | 0.191 | 0.741 |
+| M2 LightGBM, calibrated | 0.793 | 0.885 | 0.176 | 0.789 |
+| M3 Cox (P(decided by day 730)) | 0.759 | 0.860 | 0.191 | 0.752 |
+
+M2 is shown after isotonic recalibration on 2015. Flagging cases whose calibrated chance of a decision within 24 months
+is below 0.5 marks 34% of 2016 filings, with precision 62% and recall 59% for overruns.
+Every number above is from logged runs `765fb934f7` (M2) and `67d928e3ec` (evaluation); the full log is below.
+
+```mermaid
+flowchart LR
+    P["Typed Parquet, 80.9M cases"] -->|"sql/labels.sql + DQ rules"| L["Label: decided within 730 days"]
+    L -->|"censoring rule, exclusions"| Q["53.7M labelable cases"]
+    Q -->|"sample.py, state x year, seeded hash"| S["3.0M-case sample"]
+    P -->|"sql/features.sql"| H["Court history, point in time"]
+    S --> F["Features known at filing"]
+    H --> F
+    F -->|"split.py"| T["Train 2010-14, valid 2015, test 2016, 10 percent of courts held out"]
+    T -->|"train.py"| M["B0-B2 baselines, logistic, LightGBM, Cox"]
+    M --> X[("experiments.csv and MLflow")]
+    M -->|"evaluate.py"| E["Metrics, bootstrap intervals, slices, errors"]
+    E -->|"report.py"| R["Report, model card, dashboard page"]
+```
+
+**Limitations.** Records end in 2018 and thin out after early 2019, which fixes the observation end at 31 Dec 2018 and
+the test year at 2016. Early filing years over-represent long cases because courts digitised mid-period. Some districts'
+closures go unrecorded (those districts are excluded), and outcomes without a decision date count as pending. Act records are thin
+for early years and act labels are standardised by rules. The most confident mistakes come from courts whose recorded
+disposal rate was near zero the year before, often a gap in decision records ([error analysis](docs/error_analysis.md)).
+The model learns associations and says nothing about why a case or court is slow. It is for research only, never for
+decisions about individual cases.
+
+Train / valid / test: 1,554,034 / 506,111 / 548,258 cases, plus 80,357 from 636 held-out courts.
 
 ## What is here
 
@@ -37,8 +88,10 @@ Every figure has its limits spelled out in [the brief](outputs/where_justice_get
 |---|---|
 | DuckDB + Parquet pipeline: loaders, SQL rules, act-name mapping | [pipeline/](pipeline/), [sql/dq_rules.sql](sql/dq_rules.sql) |
 | Excel data-quality scorecard, with live formulas | [outputs/data_quality_scorecard.xlsx](outputs/data_quality_scorecard.xlsx) |
-| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, what-if calculator | [Live](https://where-justice-gets-stuck.streamlit.app/), [dashboard/](dashboard/) |
+| Streamlit dashboard: findings, district map, state profiles, data-quality explorer, delay-risk model, what-if calculators | [Live](https://where-justice-gets-stuck.streamlit.app/), [dashboard/](dashboard/) |
+| Always-on static copy of the dashboard on GitHub Pages | [Open](https://ritik650.github.io/where-justice-gets-stuck/), [pipeline/build_site.py](pipeline/build_site.py) |
 | Two-page brief with the top findings | [outputs/where_justice_gets_stuck_brief.pdf](outputs/where_justice_gets_stuck_brief.pdf) |
+| Delay-risk model: labels, point-in-time features, baselines, LightGBM, evaluation, model card | [reports/ml_poc_report.md](reports/ml_poc_report.md), [src/ml/](src/ml/), [docs/model_card.md](docs/model_card.md) |
 
 ### Data-management work
 
@@ -69,11 +122,28 @@ python -I pipeline/run_all.py                 # all 81M rows
 python -I pipeline/run_all.py --pilot 01,08   # a trial on Maharashtra and Bihar, in separate folders
 ```
 
-Tests: `pytest tests`. They cover the survival estimator against `lifelines`, the label rules on real labels, the downloader, the Excel formulas against an independent calculation, every dashboard page, and reconciliation of the full build when it is present. GitHub Actions runs them on every push.
+The delay-risk model runs step by step with `make` (GNU make; on Windows, for example `mingw32-make`). Settings such as paths, seed, sample size and horizon are in [config.yaml](config.yaml):
+
+```
+make all                    # data, dq, features, train, evaluate, report on the full data
+make all PROFILE=fixture    # the same steps on a small synthetic fixture, in about a minute
+make test                   # pytest
+make lint                   # ruff
+make mlflow                 # load every logged run into MLflow, then: mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+Tests: `pytest tests`. They cover the survival estimator against `lifelines`, the label rules on real labels, the downloader, the Excel formulas against an independent calculation, every dashboard page, and reconciliation of the full build when it is present. For the delay-risk model they check the label's edge cases, that no feature is dated after filing (by rebuilding features with every later event deleted), that splits are disjoint and repeatable, and that the fixture build reproduces its recorded results. GitHub Actions lints, runs the fixture pipeline and runs the tests on every push.
 
 ### Host the dashboard
 
 The [live copy](https://where-justice-gets-stuck.streamlit.app/) runs on [Streamlit Community Cloud](https://streamlit.io/cloud) and updates when `main` changes. To host your own, point a new app at this repository with `dashboard/app.py` as the main file. It installs the short [dashboard/requirements.txt](dashboard/requirements.txt), and no secrets or row-level data are needed. The case data licence is non-commercial, so keep any hosted copy non-commercial too.
+
+Community Cloud puts an app to sleep when nobody has opened it for a while, so an [always-on copy](https://ritik650.github.io/where-justice-gets-stuck/) is also published with GitHub Pages. It is plain files built from the same tables and the same chart definitions, so its figures always match the app. To rebuild and publish it:
+
+```
+python -I pipeline/build_site.py           # writes site/
+python -I pipeline/publish_site.py --push   # commits site/ to the gh-pages branch and pushes it
+```
 
 ## How it is built
 
@@ -110,13 +180,54 @@ pipeline/
   brief.py          chart images and the two-page PDF
   run_all.py        everything, in order
 sql/dq_rules.sql    the rule catalogue
+sql/labels.sql      the delay-risk label, its exclusions and censoring rule
+sql/dq_labels.sql   label checks
+sql/features.sql    point-in-time features
+src/ml/             the delay-risk model: dq, sample, features, split, train, evaluate, report
+reports/            the model's report, figures and experiment log
+config.yaml         paths, seed, sample size, horizon
+Makefile            make all, or one step at a time
 dashboard/          the Streamlit app, reading data/mart only
-docs/               methods, data dictionary, schema, analyst issue log, design source
+docs/               methods, data dictionary, schema, label, features, model card, design source
 data/mart/          aggregate tables, safe to share
 data/geo/           simplified district boundaries
+data/MANIFEST.md    source files with sizes and SHA-256 hashes
 ```
 
 The design decisions worth a look are in [docs/methods.md](docs/methods.md), including the checks that caught real errors while this was built.
+
+## Experiment log
+
+Every run of the delay-risk model, from [reports/experiments.csv](reports/experiments.csv), which also records each run's
+parameters, feature version, split version, row counts, config hash and git commit. Grid candidates carry no test
+metrics: the test set was scored only by the models chosen on validation. Stages: `final` models, `grid` candidates,
+`experiment` (leakage tests, ablations, the 12-month label), `evaluation` (bootstrap intervals and threshold).
+
+| Run | Stage | Model | Label | Valid AUC | Test AUC | Unseen-court AUC | Test Brier | Seconds |
+|---|---|---|---|---|---|---|---|---|
+| `b6bdc6564e` | final | B0 majority class | 24m | 0.500 | 0.500 | 0.500 | 0.247 | 0 |
+| `4eb252b4f9` | final | B1 court prior-year disposal rate | 24m | 0.687 | 0.679 | 0.679 | 0.209 | 0 |
+| `dee389ff94` | final | B2 court x case-type prior-year rate | 24m | 0.742 | 0.746 | 0.740 | 0.191 | 0 |
+| `4d273f4d51` | experiment | B1b court 24-month rate, cohort filed 3 years earlier | 24m | 0.636 | 0.640 | 0.630 | 0.217 | 0 |
+| `af5f8fec25` | final | M1 logistic regression | 24m | 0.784 | 0.764 | 0.741 | 0.191 | 120 |
+| `26ae3e3d82` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 241 |
+| `5e4356525e` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 172 |
+| `b467f3c442` | grid | M2 LightGBM candidate | 24m | 0.820 |  |  |  | 91 |
+| `4e568e01bf` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 136 |
+| `cad2c4ab99` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 139 |
+| `1155abb6a6` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 136 |
+| `e9bde2506e` | grid | M2 LightGBM candidate | 24m | 0.820 |  |  |  | 87 |
+| `966897ba3b` | grid | M2 LightGBM candidate | 24m | 0.821 |  |  |  | 84 |
+| `765fb934f7` | final | M2 LightGBM | 24m | 0.821 | 0.793 | 0.789 | 0.187 | 201 |
+| `6fa473e88b` | final | M3 Cox proportional hazards | 24m | 0.757 | 0.759 | 0.752 | 0.191 | 45 |
+| `ecf789913e` | experiment | M2 + leak: days to last hearing | 24m | 0.999 | 0.997 | 0.995 | 0.017 | 52 |
+| `f1de46cf60` | experiment | M2 + leak: defendant's advocate named | 24m | 0.826 | 0.796 | 0.790 | 0.185 | 172 |
+| `6370b06b3b` | experiment | M2 court + timing features only | 24m | 0.711 | 0.679 | 0.678 | 0.213 | 42 |
+| `dae581640d` | experiment | M2 case + timing features only | 24m | 0.780 | 0.770 | 0.778 | 0.187 | 34 |
+| `e37e37744d` | experiment | M2 without court and district IDs | 24m | 0.818 | 0.803 | 0.797 | 0.175 | 115 |
+| `de21eb9582` | experiment | M2 12-month label | 12m | 0.823 | 0.806 | 0.813 | 0.184 | 108 |
+| `d7acddc100` | experiment | M2 trained on 2012-2014 only | 24m | 0.821 | 0.791 | 0.791 | 0.188 | 179 |
+| `67d928e3ec` | evaluation | M2 vs B1 on test (bootstrap, calibration, threshold) | 24m |  | 0.793 | 0.789 | 0.176 | 739 |
 
 ## Sources and licences
 

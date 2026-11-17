@@ -1,0 +1,16 @@
+{
+ "sample_id_hash": "ebd74adbdb3d28ae",
+ "split_version": "ddc1ed717ad1d15d",
+ "feature_version": "v1-38f6775d",
+ "population": 34642,
+ "sampled": 34642,
+ "test_auc_b0": 0.5,
+ "test_auc_b1": 0.7585,
+ "test_auc_b2": 0.8322,
+ "test_auc_m1": 0.8346,
+ "test_auc_m2": 0.8339,
+ "test_auc_m3": 0.8316,
+ "test_brier_m2_cal": 0.1566,
+ "auc_gap_m2_vs_b1": 0.0754,
+ "unseen_auc_m2": 0.7861
+}

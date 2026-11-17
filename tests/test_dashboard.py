@@ -145,6 +145,33 @@ def test_issue_search_filters():
     assert not at.exception
 
 
+@pytest.mark.skipif(not (MART / "ml_summary.json").exists(), reason="model tables not built")
+def test_delay_risk_page_and_its_what_if():
+    at = page("delay_risk")
+    assert not at.exception, at.exception
+    assert at.title[0].value == "Delay risk model"
+    assert any(m.label.startswith("Test ROC-AUC") for m in at.metric)
+    whatif = pd.read_parquet(MART / "ml_whatif.parquet")
+    # Pick a state, district, court and case type from the table and check the page shows that row's score. A score
+    # between 5% and 95% is shown as a plain percentage, so the expected label is unambiguous.
+    middling = whatif[whatif["p_model"].between(0.05, 0.95)]
+    row = middling.sort_values("test_cases", ascending=False).iloc[0]
+    at.selectbox(key="wi_state").set_value(row["state_name"])
+    at = at.run()
+    at.selectbox(key="wi_district").set_value(row["district_name"])
+    at = at.run()
+    at.selectbox(key="wi_court").set_value(row["court"])
+    at = at.run()
+    at.selectbox(key="wi_type").set_value(row["case_type"])
+    at = at.run()
+    assert not at.exception, at.exception
+    assert metric(at, "Chance of a decision within 24 months").value == f"{row['p_model']:.0%}"
+    for view in ["Case type", "Court level", "State"]:
+        at.segmented_control(key="slice_dim").set_value(view)
+        at = at.run()
+        assert not at.exception, view
+
+
 def test_methods_page_shows_the_methods_file():
     at = page("methods")
     assert not at.exception

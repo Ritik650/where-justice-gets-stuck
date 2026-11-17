@@ -19,6 +19,7 @@ page = st.navigation(
         st.Page("app_pages/findings.py", title="Findings", icon=":material/insights:", default=True),
         st.Page("app_pages/state_profile.py", title="State profile", icon=":material/location_on:"),
         st.Page("app_pages/data_quality.py", title="Data quality", icon=":material/rule:"),
+        st.Page("app_pages/delay_risk.py", title="Delay risk model", icon=":material/query_stats:"),
         st.Page("app_pages/methods.py", title="Methods", icon=":material/menu_book:"),
     ],
     position="top",
