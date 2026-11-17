@@ -1,0 +1,87 @@
+# Settings for the delay-risk model (src/ml). Every step reads this file, and every logged run records a hash of it.
+#
+# Pick a profile with `make all PROFILE=fixture`, or ML_PROFILE=fixture in the environment. The default is "full".
+#   full      the real DDL data, built by `make data` (download + pipeline/load.py + pipeline/standardize.py)
+#   fixture   a small synthetic dataset with the same schema, generated in seconds, for tests and CI
+
+seed: 20261117
+
+label:
+  horizon_days: 730             # main label: decided within 730 days of filing
+  secondary_horizon_days: 365   # secondary check: decided within 365 days
+  t_end: "2018-12-31"           # observation end; docs/label_definition.md explains why it is not the latest raw date
+  collection_end: "2020-12-31"  # no genuine record can be dated later than this (same as pipeline/standardize.py)
+  first_filing: "2010-01-01"    # the case files cover filings 2010-2018
+  last_filing: "2018-12-31"
+  exclude_suspect_districts: true  # districts with incomplete closure records, flagged in data/mart/q5_districts
+
+split:
+  train_years: [2010, 2014]
+  valid_year: 2015
+  test_year: 2016
+  unseen_court_share: 0.10      # share of courts held out entirely (GroupShuffleSplit)
+
+features:
+  version: v1
+  shrink_k: 20                  # pseudo-cases that pull a court x case-type rate towards the court's own rate
+  top_sections: 60              # act + section values kept by name; the rest are pooled into "other"
+  top_type_labels: 150          # raw case-type labels kept by name (counted on the training years only)
+  min_category_count: 30        # rarer one-hot levels are pooled (logistic regression only)
+
+train:
+  logistic_c: 1.0
+  logistic_max_iter: 300
+  lgbm_grid:
+    num_leaves: [63, 255]
+    learning_rate: [0.05, 0.1]
+    min_child_samples: [100, 1000]
+  lgbm_max_rounds: 3000
+  early_stopping_rounds: 50
+  cox_rows: 300000              # lifelines fits on a seeded subsample of the training years
+
+evaluate:
+  bootstrap_resamples: 1000
+  capacity_shares: [0.1, 0.2, 0.3]  # precision and recall if a registry could review this share of filings
+  permutation_rows: 200000
+  permutation_repeats: 3
+  slice_min_rows: 1000          # a slice needs this many test cases ...
+  slice_min_class: 100          # ... and this many of each class to be ranked
+  calibration_bins: 10
+
+tracking:
+  mlflow: true                  # also log to a local MLflow store (mlruns/); experiments.csv is always written
+
+profiles:
+  full:
+    source: data/parquet
+    district_flags: data/mart/q5_districts.parquet
+    work: data/ml
+    reports: reports
+    mart: data/mart
+    sample_size: 3000000
+    threads: 12
+    memory_limit: 6GB
+  fixture:
+    source: data/fixture/parquet
+    district_flags: data/fixture/parquet/q5_districts.parquet
+    work: data/fixture/ml
+    reports: data/fixture/reports
+    mart: data/fixture/mart
+    sample_size: 40000
+    threads: 2
+    memory_limit: 2GB
+    overrides:
+      train:
+        cox_rows: 20000
+        lgbm_grid:
+          num_leaves: [15, 31]
+          learning_rate: [0.1]
+          min_child_samples: [20]
+      evaluate:
+        bootstrap_resamples: 200
+        permutation_rows: 10000
+        permutation_repeats: 2
+        slice_min_rows: 200
+        slice_min_class: 20
+      tracking:
+        mlflow: false

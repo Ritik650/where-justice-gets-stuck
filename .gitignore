@@ -15,3 +15,8 @@ outputs_*/
 data/external/2011_Dist.*
 *.duckdb
 *.duckdb.wal
+# Delay-risk model: row-level working files, the generated synthetic fixture, and the local MLflow store.
+data/ml/
+data/fixture/
+mlruns/
+mlflow.db
