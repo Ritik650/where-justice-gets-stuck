@@ -358,7 +358,11 @@ def resume_ml(m: dict) -> str:
         f"{m['sample']['population'] / 1e6:.1f}M labelable cases: test ROC-AUC {t['m2']['roc_auc']:.3f} on 2016 filings against "
         f"{t['b1']['roc_auc']:.3f} for each court's prior-year disposal rate (+{gc['gap']:.3f}, 95% CI {gc['ci_low']:.3f}-{gc['ci_high']:.3f}, "
         f"court-level bootstrap); {tu['m2']['roc_auc']:.3f} on courts never seen in training; isotonic-calibrated "
-        f"(Brier {t['m2_cal']['brier']:.3f}).\n"
+        f"(Brier {t['m2_cal']['brier']:.3f}). Showed that "
+        + ("case features alone" if train["experiments"]["case_only"]["test_auc"] > train["experiments"]["court_only"]["test_auc"] else "court features alone")
+        + f" ({max(train['experiments']['case_only']['test_auc'], train['experiments']['court_only']['test_auc']):.3f}) out-predict "
+        + ("the court's identity and history" if train["experiments"]["case_only"]["test_auc"] > train["experiments"]["court_only"]["test_auc"] else "the case's own attributes")
+        + f" ({min(train['experiments']['case_only']['test_auc'], train['experiments']['court_only']['test_auc']):.3f}).\n"
         f"Engineered it as DuckDB SQL + Makefile + config: censoring-aware labels with 6 invariant checks, point-in-time court "
         f"history verified by truncation tests, a leakage test (one post-filing field lifted validation AUC from {m2_valid:.3f} "
         f"to {leak['valid_auc']:.3f}), {n_runs} runs logged to MLflow and CSV, CI on a synthetic fixture.\n"
@@ -410,7 +414,8 @@ alone {exp['court_only']['test_auc']:.3f}: {"what a case is matters more than wh
 Top features: {", ".join(r['feature'] for r in imp)}.
 
 **PR-AUC, Brier, threshold.** ROC-AUC ignores the base rate; PR-AUC shows precision for the class you act on; Brier
-and log loss judge the probabilities themselves. M1 used balanced class weights, which help ranking and hurt Brier.
+and log loss judge the probabilities themselves. M1 used balanced class weights, which pull its probabilities away from
+the observed rates (calibration error {t['m1']['ece']:.3f} before recalibration, {t['m1_cal']['ece']:.3f} after).
 Threshold 0.5 on calibrated probability: flags {th['flagged_share']:.0%}, precision {th['precision_delay']:.0%}, recall {th['recall_delay']:.0%}. With
 limited review capacity you pick the cut-off from capacity, set on validation.
 
@@ -445,6 +450,13 @@ not known until a year after this case is filed. Use a cohort three years back, 
 
 **Never for individual cases.** It learns recording gaps as well as delay, it would change the outcomes it was
 trained on, and party gender is predicted from names. It is a research and planning tool.
+
+**What surprised you?** Three things. What a case is out-predicts where it is filed ({exp['case_only']['test_auc']:.3f} against
+{exp['court_only']['test_auc']:.3f}). Dropping the court and district IDs lowered validation AUC ({exp['no_court_id']['valid_auc']:.3f}) but raised test AUC
+({exp['no_court_id']['test_auc']:.3f} against {t['m2']['roc_auc']:.3f}): court effects learned from old years go stale, while last year's rates stay current.
+I did not switch models on that, because choosing on the test year is peeking. And the most confident mistakes came
+from courts whose recorded disposal rate the year before was near zero: often missing decision records, not a stalled
+court (docs/error_analysis.md). M1 also stopped at its iteration limit, so its score is a lower bound.
 """
 
 
